@@ -2,17 +2,36 @@ import { useState } from 'react';
 import { Flex, Button, IconButton, Link, Box, Spacer, Heading } from '@chakra-ui/react';
 import { Link as ReachLink } from 'react-router-dom';
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
+import { connect } from 'react-redux';
+import { logout } from '../../actions/auth';
+import PropTypes from 'prop-types';
 
-function Navbar() {
+function Navbar({ auth: { isAuthenticated, loading }, logout }) {
   const [display, changeDisplay] = useState('none');
-  return (
-    <Flex boxShadow='md'>
-      <Box p='4'>
-        <Heading size='2xl' fontFamily='Ubuntu' ml={['1', '1', '0.1', '8', '14']}>
-          Nebu<span style={{ color: '#38B2AC' }}>la</span>
-        </Heading>
-      </Box>
-      <Spacer />
+
+  const authLinks = (
+    <Box mt={4} mr={15} display={['block', 'block', 'flex', 'flex']}>
+      <Button
+        variant='solid'
+        background='#38B2AC'
+        color='white'
+        mr='7'
+        padding={6}
+        pl={8}
+        pr={8}
+        rounded={30}
+        fontFamily='Ubuntu'
+        _hover={{ background: 'teal.500' }}
+        _active={{ background: 'teal.500' }}
+        onClick={logout}
+      >
+        Logout
+      </Button>
+    </Box>
+  );
+
+  const guestLinks = (
+    <>
       <Box mt={4} mr={15} display={['none', 'none', 'flex', 'flex']}>
         <Link
           as={ReachLink}
@@ -21,7 +40,6 @@ function Navbar() {
           _focus={{ outline: 'none' }}
         >
           <Button
-            as='a'
             variant='solid'
             background='#38B2AC'
             color='white'
@@ -44,12 +62,11 @@ function Navbar() {
           _focus={{ outline: 'none' }}
         >
           <Button
-            as='a'
             variant='unstyled'
             colorScheme='teal'
             mr='4'
             position='relative'
-            top={2}
+            top={1}
             fontFamily='Ubuntu'
           >
             Log In
@@ -112,8 +129,28 @@ function Navbar() {
           </Link>
         </Flex>
       </Flex>
+    </>
+  );
+
+  return (
+    <Flex boxShadow='md'>
+      <Box p='4'>
+        <Heading size='2xl' fontFamily='Ubuntu' ml={['1', '1', '0.1', '8', '14']}>
+          Nebu<span style={{ color: '#38B2AC' }}>la</span>
+        </Heading>
+      </Box>
+      <Spacer />
+      {!loading && isAuthenticated ? authLinks : guestLinks}
     </Flex>
   );
 }
 
-export default Navbar;
+Navbar.propTypes = {
+  logout: PropTypes.func.isRequired
+};
+
+const mapStateToProps = (state) => ({
+  auth: state.auth
+});
+
+export default connect(mapStateToProps, { logout })(Navbar);
