@@ -12,16 +12,36 @@ import {
   Heading,
   Image
 } from '@chakra-ui/react';
-import { ViewIcon, ViewOffIcon, Icon } from '@chakra-ui/icons';
-import { FaGoogle } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
+import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
+import { Link, Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { register } from '../../actions/auth';
+import PropTypes from 'prop-types';
 
-function Signup() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+function Signup({ register, isAuthenticated }) {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: ''
+  });
+
+  const { name, email, password } = formData;
+
+  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    register({ name, email, password });
+  };
+
   const [showPassword, setShowPassword] = useState(false);
+
   const isInvalid = password === '' || email === '' || name === '';
+
+  if (isAuthenticated) {
+    return <Redirect to='/dashboard' />;
+  }
+
   return (
     <div className='sign-up'>
       <Flex
@@ -38,8 +58,10 @@ function Signup() {
           p={12}
           background='gray.100'
         >
-          <Heading mb={6}>Sign Up</Heading>
-          <form>
+          <Heading mb={6} mt={['20', '20', '5', '5']}>
+            Sign Up
+          </Heading>
+          <form onSubmit={handleSubmit}>
             <Stack margin='auto' spacing={5} marginTop={5}>
               <FormControl>
                 <FormLabel htmlFor='name'>Full Name</FormLabel>
@@ -47,9 +69,9 @@ function Signup() {
                   variant='filled'
                   isRequired
                   type='text'
-                  id='name'
+                  name='name'
                   value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  onChange={handleChange}
                 ></Input>
               </FormControl>
 
@@ -59,9 +81,9 @@ function Signup() {
                   variant='filled'
                   isRequired
                   type='email'
-                  id='email'
+                  name='email'
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={handleChange}
                 ></Input>
                 <FormHelperText>We'll never share your email.</FormHelperText>
               </FormControl>
@@ -74,9 +96,9 @@ function Signup() {
                     isRequired
                     type={showPassword ? 'text' : 'password'}
                     autoComplete='off'
-                    id='password'
+                    name='password'
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={handleChange}
                   ></Input>
                   <InputRightElement width='2.5rem'>
                     {/*<Button height = '1.75rem' size ='sm' onClick = {() => setShowPassword(!showPassword)}>{showPassword ? 'Hide' : 'Show'}</Button>*/}
@@ -105,21 +127,11 @@ function Signup() {
 
               <FormControl>
                 <FormLabel fontSize={13} color='gray.500' mb={6}>
-                  Already have an account : <Link to='/log-in'>Log in</Link>
+                  Already have an account? <Link to='/log-in'>Log in</Link>
                 </FormLabel>
               </FormControl>
             </Stack>
           </form>
-
-          <Heading fontSize={15} textAlign='center' mb={6}>
-            or
-          </Heading>
-          <FormControl>
-            <FormLabel fontSize={13} color='gray.500'>
-              Sign Up with :{' '}
-              <Icon cursor='pointer' fontSize={18} ml={5} color='teal.400' as={FaGoogle}></Icon>
-            </FormLabel>
-          </FormControl>
         </Flex>
       </Flex>
 
@@ -135,4 +147,13 @@ function Signup() {
   );
 }
 
-export default Signup;
+Signup.propTypes = {
+  register: PropTypes.func.isRequired,
+  isAuthenticated: PropTypes.bool
+};
+
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.auth.isAuthenticated
+});
+
+export default connect(mapStateToProps, { register })(Signup);
