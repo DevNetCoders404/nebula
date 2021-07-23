@@ -13,9 +13,32 @@ import {
   Heading,
   Image
 } from '@chakra-ui/react';
+import { Link, Redirect } from 'react-router-dom';
+import { login } from '../../actions/auth';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
-function Login() {
+function Login({ login, isAuthenticated }) {
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  });
+
+  const { email, password } = formData;
+
+  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    login({ email, password });
+  };
+
   const [showPassword, setShowPassword] = useState(false);
+
+  if (isAuthenticated) {
+    return <Redirect to='/dashboard' />;
+  }
+
   return (
     <div className='log-in'>
       <Flex
@@ -35,11 +58,18 @@ function Login() {
           <Heading mb={6} mt={['20', '20', '5', '5']}>
             Log In
           </Heading>
-          <form method='POST'>
+          <form onSubmit={handleSubmit}>
             <Stack margin='auto' spacing={5} marginTop={5}>
               <FormControl>
                 <FormLabel htmlFor='email'>Email Address</FormLabel>
-                <Input variant='filled' isRequired type='email' id='email'></Input>
+                <Input
+                  variant='filled'
+                  isRequired
+                  type='email'
+                  name='email'
+                  value={email}
+                  onChange={handleChange}
+                ></Input>
                 <FormHelperText>We'll never share your email.</FormHelperText>
               </FormControl>
 
@@ -51,7 +81,9 @@ function Login() {
                     isRequired
                     type={showPassword ? 'text' : 'password'}
                     autoComplete='off'
-                    id='password'
+                    name='password'
+                    value={password}
+                    onChange={handleChange}
                   ></Input>
                   <InputRightElement width='2.5rem'>
                     {/*<Button height = '1.75rem' size ='sm' onClick = {() => setShowPassword(!showPassword)}>{showPassword ? 'Hide' : 'Show'}</Button>*/}
@@ -72,6 +104,12 @@ function Login() {
                   Log In
                 </Button>
               </FormControl>
+
+              <FormControl>
+                <FormLabel fontSize={13} color='gray.500' mb={6}>
+                  Don't have an account? <Link to='/sign-up'>Sign up</Link>
+                </FormLabel>
+              </FormControl>
             </Stack>
           </form>
         </Flex>
@@ -89,4 +127,13 @@ function Login() {
   );
 }
 
-export default Login;
+Login.propTypes = {
+  login: PropTypes.func.isRequired,
+  isAuthenticated: PropTypes.bool
+};
+
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.auth.isAuthenticated
+});
+
+export default connect(mapStateToProps, { login })(Login);
