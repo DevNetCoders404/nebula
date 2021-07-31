@@ -15,7 +15,8 @@ router.get('/me', auth, async (req, res) => {
   try {
     const profile = await Profile.findOne({ user: req.user.id }).populate('user', [
       'name',
-      'avatar'
+      'avatar',
+      'email'
     ]);
 
     if (!profile) {
@@ -30,7 +31,7 @@ router.get('/me', auth, async (req, res) => {
 });
 
 // @route   POST api/profile/
-// @desc    Create and Update user profile
+// @desc    Create and Update user basic profile
 // @access  Private
 
 router.post(
@@ -39,7 +40,7 @@ router.post(
     auth,
     [
       check('status', 'Status is required').not().isEmpty(),
-      check('skills', 'Skills are required').not().isEmpty()
+      check('contactNo', 'Enter valid number').isMobilePhone().isLength({ min: 10 })
     ]
   ],
   async (req, res) => {
@@ -47,23 +48,15 @@ router.post(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const { website, status, skills, socials } = req.body;
+    const { website, status, address, contactNo } = req.body;
 
     // Build profile object
     const profileFields = {};
     profileFields.user = req.user.id;
 
-    if (website) profileFields.website = website;
+    if (address) profileFields.address = address;
+    if (contactNo) profileFields.contactNo = contactNo;
     if (status) profileFields.status = status;
-
-    if (skills) profileFields.skills = skills;
-
-    // Build social object
-    profileFields.socials = {};
-    if (socials.facebook) profileFields.socials.facebook = socials.facebook;
-    if (socials.twitter) profileFields.socials.twitter = socials.twitter;
-    if (socials.github) profileFields.socials.github = socials.github;
-    if (socials.linkedin) profileFields.socials.linkedin = socials.linkedin;
 
     try {
       let profile = await Profile.findOne({ user: req.user.id });
@@ -90,13 +83,97 @@ router.post(
   }
 );
 
+// @route   POST api/profile/skills
+// @desc    Create and Update user Skill in Profile
+// @access  Private
+
+router.post('/skills', auth, async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+  const { skills } = req.body;
+
+  // Build profile object
+  const profileFields = {};
+  if (skills) profileFields.skills = skills;
+
+  try {
+    let profile = await Profile.findOne({ user: req.user.id });
+    if (profile) {
+      // Update profile if already exists
+
+      profile = await Profile.findOneAndUpdate(
+        { user: req.user.id },
+        { $set: profileFields },
+        { new: true }
+      );
+      return res.json(profile);
+    }
+
+    // Create new profile
+
+    profile = new Profile(profileFields);
+    await profile.save();
+    res.json(profile);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+// @route   POST api/profile/socials
+// @desc    Create and Update user Socials in Profile
+// @access  Private
+
+router.post('/socials', auth, async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+  const { socials, website } = req.body;
+
+  // Build profile object
+  const profileFields = {};
+  if (website) profileFields.website = website;
+  if (socials) profileFields.socials = {};
+
+  if (socials.facebook) profileFields.socials.facebook = socials.facebook;
+  if (socials.twitter) profileFields.socials.twitter = socials.twitter;
+  if (socials.github) profileFields.socials.github = socials.github;
+  if (socials.linkedin) socials.linkedin = socials.linkedin;
+
+  try {
+    let profile = await Profile.findOne({ user: req.user.id });
+    if (profile) {
+      // Update profile if already exists
+
+      profile = await Profile.findOneAndUpdate(
+        { user: req.user.id },
+        { $set: profileFields },
+        { new: true }
+      );
+      return res.json(profile);
+    }
+
+    // Create new profile
+
+    profile = new Profile(profileFields);
+    await profile.save();
+    res.json(profile);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
 // @route   GET api/profile/
 // @desc    Get all profile
 // @access  Public
 
 router.get('/', async (req, res) => {
   try {
-    const profiles = await Profile.find().populate('user', ['name', 'avatar']);
+    const profiles = await Profile.find().populate('user', ['name', 'avatar', 'email']);
     res.json(profiles);
   } catch (err) {
     console.log(err.message);
@@ -112,7 +189,8 @@ router.get('/user/:user_id', async (req, res) => {
   try {
     const profiles = await Profile.findOne({ user: req.params.user_id }).populate('user', [
       'name',
-      'avatar'
+      'avatar',
+      'email'
     ]);
 
     if (!profiles) {
