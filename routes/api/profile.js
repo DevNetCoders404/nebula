@@ -48,7 +48,7 @@ router.post(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const { website, status, address, contactNo } = req.body;
+    const { status, address, contactNo } = req.body;
 
     // Build profile object
     const profileFields = {};
