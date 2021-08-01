@@ -148,7 +148,84 @@ router.put('/unlike/:id', auth, async (req, res) => {
 
     await posts.save();
 
-    res.json({msg: 'Post disliked'});
+    res.json({ msg: 'Post disliked' });
+  } catch (err) {
+    console.error(err.message);
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ msg: 'Post not found' });
+    }
+    res.status(500).send('Server Error');
+  }
+});
+
+// @route   POST api/posts/comment/:id
+// @desc    Add a comment
+// @access  Private
+router.post(
+  '/comment/:id',
+  [auth, check('text', 'Text is required').not().isEmpty()],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    try {
+      const user = await Users.findById(req.user.id).select('-password');
+      const post = await Post.findById(req.params.id);
+
+      const newComments = {
+        text: req.body.text,
+        code: req.body.code,
+        name: user.name,
+        avatar: user.avatar,
+        user: req.user.id
+      };
+
+      post.comments.unshift(newComments);
+
+      await post.save();
+
+      res.json(post.comments);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server Error');
+    }
+  }
+);
+
+// @route   DELETE api/posts/comment/:id/:commentid
+// @desc    delete comment by ID
+// @access  Private
+router.delete('/comment/:id/:commentid', auth, async (req, res) => {
+  try {
+    const posts = await Post.findById(req.params.id);
+
+    if (!posts) {
+      return res.status(404).json({ msg: 'Post not found' });
+    }
+
+    // pull out comment
+    const comment = posts.comments.find((comment) => comment.id === req.params.commentid);
+
+    // Make sure comment exist
+    if (!comment) {
+      return res.status(404).json({ msg: ' Comment not found' });
+    }
+
+    if (comment.user.toString() !== req.user.id) {
+      return res.status(400).json({ msg: 'User not authorized' });
+    }
+
+    const removeIndex = posts.comments
+      .map((comment) => comment.user.toString())
+      .indexOf(req.user.id);
+
+    posts.comments.splice(removeIndex, 1);
+
+    await posts.save();
+
+    res.json(posts.comments);
   } catch (err) {
     console.error(err.message);
     if (err.kind === 'ObjectId') {
