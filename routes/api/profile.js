@@ -83,7 +83,7 @@ router.post('/skills', auth, async (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
   const { skills } = req.body;
-  
+
   // Build profile object
   const profileFields = {};
   if (skills) profileFields.skills = skills;
