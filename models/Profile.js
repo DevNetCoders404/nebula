@@ -8,7 +8,7 @@ const ProfileSchema = mongoose.Schema({
   address: {
     type: String
   },
-  contactNo: {
+  mobile: {
     type: Number
   },
   website: {
@@ -25,7 +25,7 @@ const ProfileSchema = mongoose.Schema({
         required: true
       },
       percent: {
-        type: Number,
+        type: String,
         required: true
       }
     }
