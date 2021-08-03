@@ -148,7 +148,7 @@ router.put('/unlike/:id', auth, async (req, res) => {
 
     await posts.save();
 
-    res.json({ msg: 'Post disliked' });
+    res.json(posts.likes);
   } catch (err) {
     console.error(err.message);
     if (err.kind === 'ObjectId') {
