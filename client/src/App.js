@@ -11,6 +11,7 @@ import { useEffect } from 'react';
 import { loadUser } from './actions/auth';
 import setAuthToken from './utils/setAuthToken';
 import PrivateRoute from './components/routing/PrivateRoute';
+import Feed from './components/feed/Feed';
 
 if (localStorage.token) {
   setAuthToken(localStorage.token);
@@ -31,6 +32,7 @@ function App() {
             <Route exact path='/sign-up' component={Signup}></Route>
             <Route exact path='/log-in' component={Login}></Route>
             <PrivateRoute exact path='/dashboard' component={Dashboard}></PrivateRoute>
+            <PrivateRoute exact path='/feed' component={Feed}></PrivateRoute>
           </Switch>
         </Box>
       </Router>

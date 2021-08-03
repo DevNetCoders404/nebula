@@ -10,22 +10,58 @@ function Navbar({ auth: { isAuthenticated, loading }, logout }) {
   const [display, changeDisplay] = useState('none');
 
   const authLinks = (
-    <Box mt={4} mr={15} display={['block', 'block', 'flex', 'flex']}>
+    <Box mt={4} mr={15} display={['none', 'none', 'flex', 'flex']}>
+      <Link as={ReachLink} to='/feed' style={{ textDecoration: 'none' }} _focus={{ outline: 'none' }}>
+        <Button
+          variant='unstyled'
+          colorScheme='teal'
+          mr='8'
+          position='relative'
+          top={2}
+          fontFamily='Ubuntu'
+        >
+          Feed
+        </Button>
+      </Link>
+      <Link
+        as={ReachLink}
+        to='/editor'
+        style={{ textDecoration: 'none' }}
+        _focus={{ outline: 'none' }}
+      >
+        <Button
+          variant='unstyled'
+          colorScheme='teal'
+          mr='8'
+          position='relative'
+          top={2}
+          fontFamily='Ubuntu'
+        >
+          Create Post
+        </Button>
+      </Link>
+      <Link as={ReachLink} to='/dashboard' style={{ textDecoration: 'none' }} _focus={{ outline: 'none' }}>
+        <Button
+          variant='unstyled'
+          colorScheme='teal'
+          mr='8'
+          position='relative'
+          top={2}
+          fontFamily='Ubuntu'
+        >
+          Profile
+        </Button>
+      </Link>
       <Button
-        variant='solid'
-        background='#38B2AC'
-        color='white'
-        mr='7'
-        padding={6}
-        pl={8}
-        pr={8}
-        rounded={30}
+        variant='unstyled'
+        colorScheme='teal'
+        mr='8'
+        position='relative'
+        top={2}
         fontFamily='Ubuntu'
-        _hover={{ background: 'teal.500' }}
-        _active={{ background: 'teal.500' }}
         onClick={logout}
       >
-        Logout
+        Log Out
       </Button>
     </Box>
   );
@@ -133,7 +169,7 @@ function Navbar({ auth: { isAuthenticated, loading }, logout }) {
   );
 
   return (
-    <Flex boxShadow='md'>
+    <Flex boxShadow='md' position='fixed' top='0' width='100%' backgroundColor="gray.100" zIndex="99">
       <Box p='4'>
         <Heading size='2xl' fontFamily='Ubuntu' ml={['1', '1', '0.1', '8', '14']}>
           Nebu<span style={{ color: '#38B2AC' }}>la</span>

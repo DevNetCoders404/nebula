@@ -1,13 +1,20 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Box, Image, Text } from "@chakra-ui/react";
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import {getCurrentProfile} from '../../actions/profile';
 
-function Profile() {
+function Profile({getCurrentProfile, profile: {profile}}) {
+  useEffect(() => {
+    getCurrentProfile();
+  }, [getCurrentProfile]);
+
   return (
     <div>
       <Box
         position="fixed"
         left={20}
-        top="150px"
+        top="155px"
         boxShadow="md"
         pt={["40px", "10px", "15px", "10px", "40"]}
         pb={["5", "5", "25px", "35px", "10"]}
@@ -15,7 +22,7 @@ function Profile() {
         id="profile-box"
       >
         <Image
-          src="https://i.ibb.co/qBmhLK4/12.jpg"
+          src={profile && profile.user.avatar}
           borderRadius={400}
           width={["150px", "150px", "150px", "160px", "50%"]}
           ml="auto"
@@ -32,7 +39,7 @@ function Profile() {
             mt={["7", "2", "5", "5", "5"]}
             align="center"
           >
-            Yash Shinde
+            {profile && profile.user.name}
           </Text>
           <Text
             align="center"
@@ -42,7 +49,7 @@ function Profile() {
             mt={["3", "1", "3", "1", "3"]}
             mb={["3", "1", "3", "1", "3"]}
           >
-            Full Stack Developer
+            {profile && profile.status}
           </Text>
           <Text
             align="center"
@@ -50,7 +57,7 @@ function Profile() {
             color="GrayText"
             fontSize={["15", "15", "17", "18", "18"]}
           >
-            Bhui Galli , Kolhapur
+            {profile && profile.address}
           </Text>
         </Box>
       </Box>
@@ -58,4 +65,13 @@ function Profile() {
   );
 }
 
-export default Profile;
+Profile.propTypes = {
+  profile: PropTypes.object.isRequired,
+  getCurrentProfile: PropTypes.func.isRequired
+};
+
+const mapStateToProps = (state) => ({
+  profile: state.profile
+});
+
+export default connect(mapStateToProps, {getCurrentProfile})(Profile);
