@@ -15,7 +15,7 @@ import {
 } from '@chakra-ui/react';
 import '@fontsource/ubuntu';
 import React, { useEffect, useState } from 'react';
-import { FaFacebook, FaTwitter, FaGithub, FaLinkedin, FaGlobe } from 'react-icons/fa';
+import { FaFacebook, FaTwitter, FaGithub, FaLinkedin } from 'react-icons/fa';
 import Navbar from '../layout/Navbar';
 import { addGeneral, addSocial, addSkills, getCurrentProfile } from '../../actions/profile';
 import { connect } from 'react-redux';
@@ -35,16 +35,12 @@ function Dashboard({
 
   /* Profile Details */
   const toast = useToast();
-  const [name, setName] = useState(''); // note: take the name of the user and set to this use state
-  //  const [email, setEmail] = useState(''); // note: take the email of the user and set to use state
   const [status, setStatus] = useState('');
   const [mobile, setMobile] = useState('');
   const [address, setAddress] = useState('');
-  //const isInvalid = mobile === '' || email === '' || name === '' || address === '';
-  const a = 'dddd';
-  const splitName = name.split(' ');
+
   /* Social Media */
-  const [facebook, setFacebook] = useState();
+  const [facebook, setFacebook] = useState('');
   const [github, setGitHub] = useState('');
   const [twitter, setTwiter] = useState('');
   const [linkedin, setLinkedIn] = useState('');
@@ -64,8 +60,6 @@ function Dashboard({
   const [percentageValue5, setPercentageValue5] = useState('');
   const [skills, setSkills] = useState('');
 
-  const gitHubUser = github.split('/');
-  const twitterUser = twitter.split('/');
   const facebookl =
     profile && profile.socials && profile.socials.facebook
       ? profile.socials.facebook.split('/').pop()
@@ -85,19 +79,18 @@ function Dashboard({
 
   const handleAddGeneral = (e) => {
     e.preventDefault();
-    addGeneral({ status, address, mobile });
+    addGeneral({ status, address, mobile, website });
+    console.log({ status, address, mobile, website });
   };
 
   const handleAddSocial = (e) => {
     e.preventDefault();
     const socials = { facebook, twitter, github, linkedin };
-    addSocial({ socials, website });
+    addSocial({ socials });
   };
 
   const handleAddSkills = (e) => {
     e.preventDefault();
-    // const skillname = selectedLanguage1;
-    // const percent = percentageValue1;
     const skills = {
       skills: [
         { skillname: selectedLanguage1, percent: percentageValue1 },
@@ -107,8 +100,6 @@ function Dashboard({
         { skillname: selectedLanguage5, percent: percentageValue5 }
       ]
     };
-    console.log(facebookl.split('/').pop());
-    //console.log(profile && profile.skills);
     addSkills({ skills });
   };
 
@@ -250,15 +241,12 @@ function Dashboard({
   function onChangeHandler() {
     const selects = document.querySelectorAll('.select-group');
     selects.forEach((elem) => {
-      console.log(selectedLanguage1);
       elem.addEventListener('change', (event) => {
         let values = Array.from(selects).map((select) => select.value);
-        console.log(values);
         for (let select of selects) {
           select.querySelectorAll('option').forEach((option) => {
             let value = option.value;
             if (value && value !== select.value && values.includes(value)) {
-              console.log(select.value);
               option.disabled = true;
             } else {
               option.disabled = false;
@@ -311,7 +299,7 @@ function Dashboard({
             mb={['3', '1', '3', '1', '3']}
             noOfLines={1}
           >
-            {profile && profile.status}
+            {profile && profile.status ? profile.status : '---'}
           </Text>
           <Text
             align='center'
@@ -319,7 +307,7 @@ function Dashboard({
             color='GrayText'
             fontSize={['15', '15', '17', '18', '18']}
           >
-            {profile && profile.address}
+            {profile && profile.address ? profile.address : '---'}
           </Text>
         </Box>
       </Box>
@@ -344,13 +332,13 @@ function Dashboard({
             borderBottomStyle='ridge'
           >
             <FormLabel fontFamily='ubuntu' fontWeight='bold' display={['inline', 'inline', 'flex']}>
-              Name{' '}
+              Website{' '}
               <FormLabel
-                ml={['0', '200px', '200px', '200px', '200px', '20']}
+                ml={['0', '200px', '200px', '200px', '200px', '70px']}
                 color='GrayText'
                 mb={['0', '2']}
               >
-                {user && user.name}
+                {profile && profile.website ? profile.website : '---'}
               </FormLabel>
             </FormLabel>
           </Flex>
@@ -446,16 +434,15 @@ function Dashboard({
             <Stack margin='auto' spacing={5} marginTop={5}>
               <Flex position='relative' top={['-50px']} left={4}>
                 <FormControl display={['inline', 'inline', 'flex']}>
-                  <FormLabel htmlFor='name'>Name</FormLabel>
+                  <FormLabel htmlFor='name'>Website</FormLabel>
                   <Input
-                    // required='required'
                     type='text'
                     id='name'
                     height={['40px', '40px', '30px']}
                     width={['245px', '245px', '270px', '290px', '465px']}
                     position='absolute'
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    value={website}
+                    onChange={(e) => setWebsite(e.target.value)}
                     left={['0', '80px', '100px']}
                   ></Input>
                 </FormControl>
@@ -465,7 +452,6 @@ function Dashboard({
                 <FormControl display={['inline', 'inline', 'flex']}>
                   <FormLabel htmlFor='status'>Status</FormLabel>
                   <Input
-                    // required='required'
                     type='text'
                     id='status'
                     height={['40px', '40px', '30px']}
@@ -599,7 +585,7 @@ function Dashboard({
             boxShadow='md'
             pt={['2', '10', '2', '2', '2']}
             pb={['35px', '35px', '35px', '35px', '45px']}
-            p="10px"
+            p='10px'
             width={['280px', '280px', '300px', '300px', '20%']}
             id='social-media-details-box'
             display='block'
@@ -624,7 +610,16 @@ function Dashboard({
                 Facebook
               </Text>
             </Flex>
-            <Text fontSize='18px' color='GrayText' align='right' mr={3} mt={['-30px']}>
+            <Text
+              fontSize='18px'
+              color='GrayText'
+              align='right'
+              mr={3}
+              mt={['-30px']}
+              ml='12.5rem'
+              isTruncated
+              maxW='100px'
+            >
               {facebookl}
             </Text>
 
@@ -648,7 +643,16 @@ function Dashboard({
                 GitHub
               </Text>
             </Flex>
-            <Text fontSize='18px' color='GrayText' align='right' mr={3} mt={['-10px']}>
+            <Text
+              fontSize='18px'
+              color='GrayText'
+              align='right'
+              mr={3}
+              mt={['-10px']}
+              ml='12.5rem'
+              isTruncated
+              maxW='100px'
+            >
               {githubl}
             </Text>
 
@@ -667,7 +671,16 @@ function Dashboard({
                 LinkedIn
               </Text>
             </Flex>
-            <Text fontSize='18px' color='GrayText' align='right' mr={3} mt={['-10px']}>
+            <Text
+              fontSize='18px'
+              color='GrayText'
+              align='right'
+              mr={3}
+              mt={['-10px']}
+              ml='12.5rem'
+              isTruncated
+              maxW='100px'
+            >
               {linkedinl}
             </Text>
 
@@ -686,27 +699,17 @@ function Dashboard({
                 Twitter
               </Text>
             </Flex>
-            <Text fontSize='18px' color='GrayText' align='right' mr={3} mt={['-10px']}>
-              {twitterl}
-            </Text>
-
-            <Flex
-              display='flex'
-              position='relative'
-              width='100%'
-              top={['30px']}
-              borderBottom='ActiveBorder'
-              borderBottomStyle='ridge'
+            <Text
+              fontSize='18px'
+              color='GrayText'
+              align='right'
+              mr={3}
+              mt={['-10px']}
+              ml='12.5rem'
+              isTruncated
+              maxW='100px'
             >
-              <Link href={website === '' ? '#' : website}>
-                <FaGlobe fontSize='30px' color='#333' style={{ marginLeft: '10px' }} />
-              </Link>
-              <Text ml='10px' fontFamily='ubuntu' fontSize='18px' fontWeight='bold' mb={3}>
-                Website
-              </Text>
-            </Flex>
-            <Text fontSize='18px' color='GrayText' align='right' mr={3} mt={['-10px']}>
-              {website === '' ? '--' : website}
+              {twitterl}
             </Text>
             <Button
               p='10px 20px 10px 20px'
@@ -815,28 +818,6 @@ function Dashboard({
                     ></Input>
                   </FormControl>
                 </Flex>
-
-                <Flex
-                  position='relative'
-                  top={['80px', '-80px', '-80px', '-80px', '-40px']}
-                  left={['3']}
-                >
-                  <FormControl display={['inline', 'inline', 'flex']}>
-                    <FormLabel htmlFor='linkedin'>Website</FormLabel>
-                    <Input
-                      type='url'
-                      id='linkedin'
-                      width={['245px', '245px', '280px', '300px', '485px']}
-                      position='absolute'
-                      placeholder='Paste the links here'
-                      height={['40px', '40px', '30px']}
-                      value={website}
-                      onChange={(e) => setWebsite(e.target.value)}
-                      left={['0', '0', '90px']}
-                    ></Input>
-                  </FormControl>
-                </Flex>
-
                 <Flex
                   position='relative'
                   top={['60px', '60px', '-140px', '-140px', '-110px']}
@@ -853,7 +834,6 @@ function Dashboard({
                           github.includes('https://github.com') ||
                           twitter.includes('https://twitter.com') ||
                           linkedin.includes('https://linkedin.com')
-                          //website.includes('.com')
                         ) {
                           toast({
                             title: 'Social Media Added Successfully',
@@ -1122,7 +1102,6 @@ function Dashboard({
                       onChange={(e) => {
                         onChangeHandler();
                         setSelectedLanguage5(e.target.value);
-                        console.log(selectedLanguage1);
                       }}
                       height={['45px', '45px', '30px']}
                       className='select-group'
