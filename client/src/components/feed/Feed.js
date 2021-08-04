@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import Navbar from '../layout/Navbar';
 import Post from './Post';
 import Profile from './Profile';
@@ -6,33 +6,23 @@ import Loader from '../layout/Loader';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { getPosts } from '../../actions/post';
+import { Box } from '@chakra-ui/react';
 
 function Feed({ getPosts, post: { posts, loading } }) {
   useEffect(() => {
     getPosts();
-    console.log(posts);
   }, [getPosts]);
-  // const [value, setValue] = useState(null);
-  // useEffect(() => {
-  //   fetch('http://localhost:8000/post')
-  //     .then((res) => {
-  //       return res.json();
-  //     })
-  //     .then((data) => {
-  //       setValue(data);
-  //     });
-  // }, []);
+
   return loading ? (
     <Loader />
   ) : (
-    <div className='feed'>
+    <Box>
       <Navbar />
       <Profile />
-      {/* value && <Post value={value} /> */}
       {posts.map((post) => (
         <Post key={post.id} post={post} />
       ))}
-    </div>
+    </Box>
   );
 }
 

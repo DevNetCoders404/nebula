@@ -16,6 +16,7 @@ function Profile({getCurrentProfile, profile: {profile}}) {
         left={20}
         top="155px"
         boxShadow="md"
+        borderRadius="lg"
         pt={["40px", "10px", "15px", "10px", "40"]}
         pb={["5", "5", "25px", "35px", "10"]}
         width={["280px", "280px", "300px", "300px", "20%"]}
