@@ -39,8 +39,7 @@ router.post('/', auth, async (req, res) => {
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
-  const { status, address, mobile } = req.body;
-
+  const { status, address, mobile, website } = req.body;
   // Build profile object
   const profileFields = {};
   profileFields.user = req.user.id;
@@ -48,6 +47,7 @@ router.post('/', auth, async (req, res) => {
   if (address) profileFields.address = address;
   if (mobile) profileFields.mobile = mobile;
   if (status) profileFields.status = status;
+  if (website) profileFields.website = website;
 
   try {
     let profile = await Profile.findOne({ user: req.user.id });
@@ -120,11 +120,10 @@ router.post('/socials', auth, async (req, res) => {
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
-  const { socials, website } = req.body;
+  const { socials } = req.body;
 
   // Build profile object
   const profileFields = {};
-  if (website) profileFields.website = website;
   if (socials) profileFields.socials = {};
 
   if (socials.facebook) profileFields.socials.facebook = socials.facebook;

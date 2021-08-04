@@ -18,7 +18,7 @@ export const getCurrentProfile = () => async (dispatch) => {
 };
 
 export const addGeneral =
-  ({ status, mobile, address }) =>
+  ({ status, mobile, address, website }) =>
   async (dispatch) => {
     const config = {
       headers: {
@@ -26,11 +26,11 @@ export const addGeneral =
       }
     };
 
-    const body = JSON.stringify({ status, address, mobile });
+    const body = JSON.stringify({ status, address, mobile, website });
 
     try {
       const res = await axios.post('/api/profile', body, config);
-      
+
       dispatch({
         type: GET_PROFILE,
         payload: res.data
@@ -44,7 +44,7 @@ export const addGeneral =
   };
 
 export const addSocial =
-  ({ socials, website }) =>
+  ({ socials }) =>
   async (dispatch) => {
     const config = {
       headers: {
@@ -52,7 +52,7 @@ export const addSocial =
       }
     };
 
-    const body = JSON.stringify({ socials, website });
+    const body = JSON.stringify({ socials });
 
     try {
       const res = await axios.post('/api/profile/socials', body, config);
@@ -70,7 +70,7 @@ export const addSocial =
   };
 
 export const addSkills =
-  ({skills}) =>
+  ({ skills }) =>
   async (dispatch) => {
     const config = {
       headers: {
