@@ -11,7 +11,12 @@ function Navbar({ auth: { isAuthenticated, loading }, logout }) {
 
   const authLinks = (
     <Box mt={4} mr={15} display={['none', 'none', 'flex', 'flex']}>
-      <Link as={ReachLink} to='/feed' style={{ textDecoration: 'none' }} _focus={{ outline: 'none' }}>
+      <Link
+        as={ReachLink}
+        to='/feed'
+        style={{ textDecoration: 'none' }}
+        _focus={{ outline: 'none' }}
+      >
         <Button
           variant='unstyled'
           colorScheme='teal'
@@ -40,7 +45,12 @@ function Navbar({ auth: { isAuthenticated, loading }, logout }) {
           Create Post
         </Button>
       </Link>
-      <Link as={ReachLink} to='/dashboard' style={{ textDecoration: 'none' }} _focus={{ outline: 'none' }}>
+      <Link
+        as={ReachLink}
+        to='/dashboard'
+        style={{ textDecoration: 'none' }}
+        _focus={{ outline: 'none' }}
+      >
         <Button
           variant='unstyled'
           colorScheme='teal'
@@ -169,7 +179,14 @@ function Navbar({ auth: { isAuthenticated, loading }, logout }) {
   );
 
   return (
-    <Flex boxShadow='md' position='fixed' top='0' width='100%' backgroundColor="gray.100" zIndex="99">
+    <Flex
+      boxShadow='md'
+      position='fixed'
+      top='0'
+      width='100%'
+      backgroundColor='gray.100'
+      zIndex='99'
+    >
       <Box p='4'>
         <Heading size='2xl' fontFamily='Ubuntu' ml={['1', '1', '0.1', '8', '14']}>
           Nebu<span style={{ color: '#38B2AC' }}>la</span>

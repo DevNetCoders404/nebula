@@ -1,11 +1,10 @@
-import { GET_POSTS, POST_ERROR, UPDATE_LIKES } from './types';
+import { GET_POSTS, POST_ERROR, UPDATE_LIKES, ADD_POST } from './types';
 import axios from 'axios';
 
 // Get posts
 export const getPosts = () => async (dispatch) => {
   try {
     const res = await axios.get('/api/posts');
-    console.log(res.data);
     dispatch({
       type: GET_POSTS,
       payload: res.data
@@ -25,7 +24,7 @@ export const addLike = (id) => async (dispatch) => {
 
     dispatch({
       type: UPDATE_LIKES,
-      payload: {id, likes: res.data}
+      payload: { id, likes: res.data }
     });
   } catch (error) {
     dispatch({
@@ -42,7 +41,32 @@ export const removeLike = (id) => async (dispatch) => {
 
     dispatch({
       type: UPDATE_LIKES,
-       payload: {id, likes: res.data}
+      payload: { id, likes: res.data }
+    });
+  } catch (error) {
+    dispatch({
+      type: POST_ERROR,
+      payload: { msg: error.response.statusText, status: error.response.status }
+    });
+  }
+};
+
+// Add post
+export const addPost = (formData) => async (dispatch) => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  };
+
+  const body = JSON.stringify(formData);
+
+  try {
+    const res = await axios.post('/api/posts', body, config);
+
+    dispatch({
+      type: ADD_POST,
+      payload: res.data
     });
   } catch (error) {
     dispatch({
