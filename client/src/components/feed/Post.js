@@ -6,6 +6,7 @@ import formatDate from '../../utils/formatDate';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { addLike, removeLike } from '../../actions/post';
+import { Link } from 'react-router-dom';
 
 function Post({
   addLike,
@@ -72,25 +73,19 @@ function Post({
             />
           </Box>
           <Box d='flex' alignItems='center'>
-            <Icon
-              as={FaRegComment}
-              ml={5}
-              w={5}
-              h={5}
-              cursor='pointer'
-              // onClick={(e) => {
-              //   e.preventDefault();
-              //   setShow(!show);
-              //   const showMessage = { show };
-              //   fetch(`http://localhost:8000/post/${values.id}`, {
-              //     method: 'POST',
-              //     headers: { 'Content-Type': 'application/json' },
-              //     body: JSON.stringify(showMessage)
-              //   }).then(() => {
-              //     console.log('Data Added');
-              //   });
-              // }}
-            />
+            <Link to={`/post/${_id}`}>
+              <Icon
+                as={FaRegComment}
+                ml={5}
+                w={5}
+                h={5}
+                cursor='pointer'
+                // onClick={(e) => {
+                //   setShow(!show);
+                //   const showMessage = { show };
+                // }}
+              />
+            </Link>
           </Box>
         </Box>
         <Text fontSize={14}>{formatDate(date)}</Text>

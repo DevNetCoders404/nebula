@@ -13,6 +13,7 @@ import setAuthToken from './utils/setAuthToken';
 import PrivateRoute from './components/routing/PrivateRoute';
 import Feed from './components/feed/Feed';
 import Editor from './components/feed/Editor';
+import PostThread from './components/thread/PostThread';
 
 if (localStorage.token) {
   setAuthToken(localStorage.token);
@@ -35,6 +36,7 @@ function App() {
             <PrivateRoute exact path='/dashboard' component={Dashboard}></PrivateRoute>
             <PrivateRoute exact path='/feed' component={Feed}></PrivateRoute>
             <PrivateRoute exact path='/editor' component={Editor}></PrivateRoute>
+            <PrivateRoute exact path='/post/:id' component={PostThread}></PrivateRoute>
           </Switch>
         </Box>
       </Router>
