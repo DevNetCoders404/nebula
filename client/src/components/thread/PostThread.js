@@ -6,6 +6,8 @@ import { getPost } from '../../actions/post';
 import { useEffect } from 'react';
 import Navbar from '../layout/Navbar';
 import Loader from '../layout/Loader';
+import Comment from './Comment';
+import CommentForm from './CommentForm';
 
 const PostThread = ({ getPost, post: { post, loading }, match }) => {
   useEffect(() => {
@@ -15,7 +17,18 @@ const PostThread = ({ getPost, post: { post, loading }, match }) => {
   return (
     <>
       <Navbar />
-      {loading || post === null ? <Loader /> : <><Profile /> <Post post={post} /></>}
+      {loading || post === null ? (
+        <Loader />
+      ) : (
+        <>
+          <Profile />
+          <Post post={post} />
+          <CommentForm postId={post._id} />
+          {post.comments.map((comment) => (
+            <Comment key={comment._id} postId={post._id} comment={comment} />
+          ))}
+        </>
+      )}
     </>
   );
 };

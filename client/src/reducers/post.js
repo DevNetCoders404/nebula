@@ -1,4 +1,11 @@
-import { GET_POSTS, GET_POST, POST_ERROR, UPDATE_LIKES, ADD_POST } from '../actions/types';
+import {
+  GET_POSTS,
+  GET_POST,
+  POST_ERROR,
+  UPDATE_LIKES,
+  ADD_POST,
+  ADD_COMMENT
+} from '../actions/types';
 
 const initialState = {
   posts: [],
@@ -42,6 +49,11 @@ const post = (state = initialState, action) => {
           post._id === payload.id ? { ...post, likes: payload.likes } : post
         ),
         loading: false
+      };
+    case ADD_COMMENT:
+      return {
+        ...state,
+        post: { ...state.post, comments: payload }
       };
     default:
       return {
