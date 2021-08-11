@@ -1,7 +1,5 @@
 import { Avatar, Box, Flex, Icon, Text, Textarea } from '@chakra-ui/react';
 import { FaRegComment, FaRegThumbsUp, FaRegThumbsDown } from 'react-icons/fa';
-import React, { useState } from 'react';
-//import Message from './Message';
 import formatDate from '../../utils/formatDate';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -14,8 +12,6 @@ function Post({
   auth,
   post: { _id, text, user, name, code, avatar, likes, comments, date }
 }) {
-  const [show, setShow] = useState(false);
-
   const currentLike = () => likes.map((like) => (like.user === auth.user._id ? 'teal' : ''));
 
   return (
@@ -74,49 +70,15 @@ function Post({
           </Box>
           <Box d='flex' alignItems='center'>
             <Link to={`/post/${_id}`}>
-              <Icon
-                as={FaRegComment}
-                ml={5}
-                w={5}
-                h={5}
-                cursor='pointer'
-                // onClick={(e) => {
-                //   setShow(!show);
-                //   const showMessage = { show };
-                // }}
-              />
+              <Icon as={FaRegComment} ml={5} w={5} h={5} cursor='pointer' />
+              <Box as='span' ml={2}>
+                {comments.length}
+              </Box>
             </Link>
           </Box>
         </Box>
         <Text fontSize={14}>{formatDate(date)}</Text>
       </Flex>
-
-      {/* {show && <Message value={_id} />}
-          {comments.map((cmt) => {
-            if (!show) {
-              return;
-            }
-            return (
-              <div key={cmt.id}>
-                <div
-                  className='comments-preview'
-                  style={{ marginBottom: '30px', marginTop: '10px' }}
-                >
-                  <Flex display='flex' ml='70px'>
-                    <Avatar src='https://i.ibb.co/Xyh9k50/1.jpg'></Avatar>
-                    <Text ml={5}>
-                      Yashraj More<Text fontSize='12px'>8:00pm</Text>
-                    </Text>
-                  </Flex>
-                  <Text ml='135px'>{cmt.message}</Text>
-                  <Flex display='flex' ml='135px' mt={3}>
-                    <Icon as={FaRegThumbsUp} cursor='pointer'></Icon>
-                    <Icon as={FaRegThumbsDown} cursor='pointer' ml={5}></Icon>
-                  </Flex>
-                </div>
-              </div>
-            );
-          })} */}
     </Box>
   );
 }
