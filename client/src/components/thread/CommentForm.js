@@ -3,8 +3,10 @@ import { useState } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { addComment } from '../../actions/post';
+import { useHistory } from 'react-router-dom';
 function CommentForm({ addComment, postId, auth: { user } }) {
   const [text, setText] = useState('');
+  const history = useHistory();
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -44,7 +46,12 @@ function CommentForm({ addComment, postId, auth: { user } }) {
             </Button>
           </Flex>
           <Flex display='none' id='add code button'>
-            <Button style={{ background: '#38B2AC' }} color='white' ml={5}>
+            <Button
+              style={{ background: '#38B2AC' }}
+              color='white'
+              ml={5}
+              onClick={() => history.push({ pathname: '/editor', state: { postId } })}
+            >
               Open Editor
             </Button>
             <Button
