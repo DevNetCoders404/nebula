@@ -33,7 +33,17 @@ function Post({
       <Text ml='70px' mt={5}>
         {text}
       </Text>
-      <Textarea value={code} width='750px' height='420px' readOnly resize='none' mt={5} ml='70px' />
+      {code && (
+        <Textarea
+          value={code}
+          width='750px'
+          height='420px'
+          readOnly
+          resize='none'
+          mt={5}
+          ml='70px'
+        />
+      )}
       <Flex
         display='flex'
         ml='70px'

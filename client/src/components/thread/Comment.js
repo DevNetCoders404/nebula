@@ -11,15 +11,17 @@ const Comment = ({ postId, comment: { _id, text, code, name, avatar, user, date 
         <Text ml={5}>{name}</Text>
       </Flex>
       <Text ml='109px'>{text}</Text>
-      <Textarea
-        value={code}
-        ml='109px'
-        width='750px'
-        height='420px'
-        readOnly
-        resize='none'
-        mt={5}
-      />
+      {code && (
+        <Textarea
+          value={code}
+          ml='109px'
+          width='750px'
+          height='420px'
+          readOnly
+          resize='none'
+          mt={5}
+        />
+      )}
       <Flex display='flex' ml='110px' mt={3}>
         <Icon as={FaRegThumbsUp} cursor='pointer'></Icon>
         <Icon as={FaRegThumbsDown} cursor='pointer' ml={5}></Icon>
