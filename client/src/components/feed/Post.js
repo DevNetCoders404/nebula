@@ -1,4 +1,4 @@
-import { Avatar, Box, Flex, Icon, Text, Textarea } from '@chakra-ui/react';
+import { Avatar, Box, Code, Flex, Icon, Text } from '@chakra-ui/react';
 import { FaRegComment, FaRegThumbsUp, FaRegThumbsDown } from 'react-icons/fa';
 import formatDate from '../../utils/formatDate';
 import { connect } from 'react-redux';
@@ -34,14 +34,17 @@ function Post({
         {text}
       </Text>
       {code && (
-        <Textarea
-          value={code}
-          width='750px'
-          height='420px'
-          readOnly
-          resize='none'
+        <Code
+          children={code}
+          whiteSpace='pre'
+          w='750px'
+          maxH='420px'
+          overflow='auto'
+          p={5}
           mt={5}
           ml='70px'
+          backgroundColor='#f6f6f6'
+          borderRadius='md'
         />
       )}
       <Flex
