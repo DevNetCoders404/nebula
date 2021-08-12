@@ -15,7 +15,12 @@ function Editor({ addPost, addComment }) {
   const [text, setText] = useState('');
   const history = useHistory();
   const toast = useToast();
-
+  const langs = {
+    javascript: 'js',
+    python: 'py',
+    c_cpp: 'cpp',
+    java: 'java'
+  };
   require('brace');
   require(`brace/mode/${selectedLanguage}`);
   require('brace/theme/monokai');
@@ -44,10 +49,11 @@ function Editor({ addPost, addComment }) {
   };
 
   function dwnld_func() {
-    console.log(code);
+    let ext = 'dl';
+    Object.keys(langs).map((key) => key === selectedLanguage && (ext = langs[key]));
     var blob = new Blob([code], { type: 'text/plain' });
     var anchor = document.createElement('a');
-    anchor.download = 'demofile';
+    anchor.download = `code.${ext}`;
     anchor.href = window.URL.createObjectURL(blob);
     anchor.target = '_blank';
     anchor.style.display = 'none';
