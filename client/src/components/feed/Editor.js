@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import AceEditor from 'react-ace';
 import { FaUndo, FaRedo, FaFileDownload } from 'react-icons/fa';
 import { Button, Flex, Select, IconButton, Textarea, useToast } from '@chakra-ui/react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import Navbar from '../layout/Navbar';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { addPost } from '../../actions/post';
+import { addPost, addComment } from '../../actions/post';
 
 export const editor = React.createRef();
-function Editor({ addPost }) {
+function Editor({ addPost, addComment }) {
   const [code, setCode] = useState('');
   const [selectedLanguage, setSelectedLanguage] = useState('javascript');
   const [text, setText] = useState('');
@@ -24,21 +24,23 @@ function Editor({ addPost }) {
   require('ace-builds/src-noconflict/ace');
 
   function onChange(newValue) {
-    // console.log("change", newValue);
     setCode(newValue);
-    //console.log(code);
   }
 
   function handleChange(value) {
     setSelectedLanguage(value);
   }
-
+  const location = useLocation();
+  console.log();
   const handleSubmit = (e) => {
     e.preventDefault();
-    addPost({ text, code });
-    console.log(code, text);
-    history.push('/feed');
-    history.go(0);
+    if (location.state && location.state.postId) {
+      addComment(location.state.postId, { text, code });
+      history.goBack();
+    } else {
+      addPost({ text, code });
+      history.push('/feed');
+    }
   };
 
   function dwnld_func() {
@@ -138,4 +140,4 @@ Editor.propTypes = {
   addPost: PropTypes.func.isRequired
 };
 
-export default connect(null, { addPost })(Editor);
+export default connect(null, { addPost, addComment })(Editor);
