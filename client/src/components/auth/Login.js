@@ -36,7 +36,7 @@ function Login({ login, isAuthenticated }) {
   const [showPassword, setShowPassword] = useState(false);
 
   if (isAuthenticated) {
-    return <Redirect to='/dashboard' />;
+    return <Redirect to='/feed' />;
   }
 
   return (

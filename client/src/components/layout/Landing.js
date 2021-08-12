@@ -5,7 +5,7 @@ function Landing() {
   return (
     <div className='home'>
       <Navbar />
-      <Box mt={['10', '10', '40', '40']} ml={['0', '0', '2', '10', '20']}>
+      <Box mt={['25%', '10', '40', '17%']} ml={['0', '0', '2', '10', '20']}>
         <Heading
           fontFamily='Ubuntu'
           fontWeight='bold'

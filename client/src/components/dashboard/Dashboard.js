@@ -729,7 +729,7 @@ function Dashboard({
           <form onSubmit={handleAddSocial}>
             <Box
               position='absolute'
-              top={['104%', '104%', '35%']}
+              top={['104%', '104%', '5%']}
               ml={['-140px']}
               left={['50%', '50%', '65%', '65%', '55%']}
               height={['null', 'null', '300px', '305px', '320px']}
@@ -908,7 +908,7 @@ function Dashboard({
             <Box
               position='absolute'
               textAlign='center'
-              top={['110%', '120%', '-1%', '-1%', '35%']}
+              top={['110%', '120%', '-1%', '-1%', '5%']}
               left={['50%', '50%', '490px', '620px', '800px']}
               ml={['-140px']}
               botton={['10%']}

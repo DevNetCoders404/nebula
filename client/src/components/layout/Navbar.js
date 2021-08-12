@@ -189,7 +189,9 @@ function Navbar({ auth: { isAuthenticated, loading }, logout }) {
     >
       <Box p='4'>
         <Heading size='2xl' fontFamily='Ubuntu' ml={['1', '1', '0.1', '8', '14']}>
-          Nebu<span style={{ color: '#38B2AC' }}>la</span>
+          <Link as={ReachLink} to='/' _focus={{outline: "0"}} textDecoration='none' _hover={{textDecoration: 'none'}}>
+            Nebu<span style={{ color: '#38B2AC' }}>la</span>
+          </Link>
         </Heading>
       </Box>
       <Spacer />

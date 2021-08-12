@@ -5,6 +5,14 @@ const breakpoints = createBreakpoints({
   '2xl': '96em'
 });
 
-const theme = extendTheme({ breakpoints });
+const Button = {
+  baseStyle: {
+    _focus: {
+      boxShadow: 'none'
+    }
+  }
+}
+
+const theme = extendTheme({ components: {Button}, breakpoints });
 
 export { theme };
