@@ -1,14 +1,15 @@
 import { Avatar, Box, Code, Flex, Icon, Text } from '@chakra-ui/react';
-import { FaRegComment, FaHeart/*, FaRegThumbsDown*/ } from 'react-icons/fa';
+import { FaRegComment, FaHeart, FaTrash } from 'react-icons/fa';
 import formatDate from '../../utils/formatDate';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { addLike, removeLike } from '../../actions/post';
+import { addLike, removeLike, removePost } from '../../actions/post';
 import { Link } from 'react-router-dom';
 
 function Post({
   addLike,
   removeLike,
+  removePost,
   auth,
   post: { _id, text, user, name, code, avatar, likes, comments, date }
 }) {
@@ -30,6 +31,9 @@ function Post({
       <Flex display='flex' alignItems='center'>
         <Avatar src={avatar}></Avatar>
         <Text ml={5}>{name}</Text>
+        {!auth.loading && user === auth.user._id && (
+          <Icon as={FaTrash} cursor='pointer' ml='auto' mr={10} w={4} h={4} color='red.400' onClick={() => removePost(_id)}></Icon>
+        )}
       </Flex>
       <Text ml='70px' mt={5}>
         {text}
@@ -98,11 +102,14 @@ function Post({
 
 Post.propTypes = {
   post: PropTypes.object.isRequired,
-  auth: PropTypes.object.isRequired
+  auth: PropTypes.object.isRequired,
+  addLike: PropTypes.func.isRequired,
+  removeLike: PropTypes.func.isRequired,
+  removePost: PropTypes.func.isRequired
 };
 
 const mapStateToProps = (state) => ({
   auth: state.auth
 });
 
-export default connect(mapStateToProps, { addLike, removeLike })(Post);
+export default connect(mapStateToProps, { addLike, removeLike, removePost })(Post);
