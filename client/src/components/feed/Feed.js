@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { getPosts } from '../../actions/post';
 import { Box } from '@chakra-ui/react';
+import ReloadButton from '../layout/ReloadButton';
 
 function Feed({ getPosts, post: { posts, loading } }) {
   useEffect(() => {
@@ -19,6 +20,7 @@ function Feed({ getPosts, post: { posts, loading } }) {
     <Box>
       <Navbar />
       <Profile />
+      <ReloadButton getMethod={getPosts} loading={loading} />
       {posts.map((post) => (
         <Post key={post._id} post={post} />
       ))}
