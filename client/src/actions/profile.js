@@ -1,5 +1,6 @@
 import { GET_PROFILE, PROFILE_ERROR } from './types';
 import axios from 'axios';
+import { setAlert } from './alert';
 
 export const getCurrentProfile = () => async (dispatch) => {
   try {
@@ -27,14 +28,13 @@ export const addGeneral =
     };
 
     const body = JSON.stringify({ status, address, mobile, website });
-
     try {
       const res = await axios.post('/api/profile', body, config);
-
       dispatch({
         type: GET_PROFILE,
         payload: res.data
       });
+      dispatch(setAlert('Profile Updated', 'success'));
     } catch (error) {
       dispatch({
         type: PROFILE_ERROR,
@@ -61,6 +61,7 @@ export const addSocial =
         type: GET_PROFILE,
         payload: res.data
       });
+      dispatch(setAlert('Social Media Updated', 'success'));
     } catch (error) {
       dispatch({
         type: PROFILE_ERROR,
