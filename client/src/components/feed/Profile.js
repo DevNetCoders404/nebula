@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { getCurrentProfile } from '../../actions/profile';
 
-function Profile({ getCurrentProfile, profile: { profile } }) {
+function Profile({ getCurrentProfile, profile: { profile }, auth: {user} }) {
   useEffect(() => {
     getCurrentProfile();
   }, [getCurrentProfile]);
@@ -23,7 +23,7 @@ function Profile({ getCurrentProfile, profile: { profile } }) {
         id='profile-box'
       >
         <Image
-          src={profile && profile.user.avatar}
+          src={user && user.avatar}
           borderRadius={400}
           width={['150px', '150px', '150px', '160px', '50%']}
           ml='auto'
@@ -40,7 +40,7 @@ function Profile({ getCurrentProfile, profile: { profile } }) {
             mt={['7', '2', '5', '5', '5']}
             align='center'
           >
-            {profile && profile.user.name}
+            {user && user.name}
           </Text>
           <Text
             align='center'
@@ -50,7 +50,7 @@ function Profile({ getCurrentProfile, profile: { profile } }) {
             mt={['3', '1', '3', '1', '3']}
             mb={['3', '1', '3', '1', '3']}
           >
-            {profile && profile.status}
+            {profile && profile.status ? profile.status : '---'}
           </Text>
           <Text
             align='center'
@@ -58,7 +58,7 @@ function Profile({ getCurrentProfile, profile: { profile } }) {
             color='GrayText'
             fontSize={['15', '15', '17', '18', '18']}
           >
-            {profile && profile.address}
+            {profile && profile.address ? profile.address : '---'}
           </Text>
         </Box>
       </Box>
@@ -68,11 +68,13 @@ function Profile({ getCurrentProfile, profile: { profile } }) {
 
 Profile.propTypes = {
   profile: PropTypes.object.isRequired,
-  getCurrentProfile: PropTypes.func.isRequired
+  getCurrentProfile: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  profile: state.profile
+  profile: state.profile,
+  auth: state.auth
 });
 
 export default connect(mapStateToProps, { getCurrentProfile })(Profile);

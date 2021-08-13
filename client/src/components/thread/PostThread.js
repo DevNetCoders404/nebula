@@ -8,6 +8,7 @@ import Navbar from '../layout/Navbar';
 import Loader from '../layout/Loader';
 import Comment from './Comment';
 import CommentForm from './CommentForm';
+import ReloadButton from '../layout/ReloadButton';
 
 const PostThread = ({ getPost, post: { post, loading }, match }) => {
   useEffect(() => {
@@ -22,6 +23,7 @@ const PostThread = ({ getPost, post: { post, loading }, match }) => {
       ) : (
         <>
           <Profile />
+          <ReloadButton getMethod={getPost} loading={loading} postId={match.params.id} />
           <Post post={post} />
           <CommentForm postId={post._id} />
           {post.comments.map((comment) => (
