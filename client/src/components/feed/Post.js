@@ -1,5 +1,5 @@
 import { Avatar, Box, Code, Flex, Icon, Text } from '@chakra-ui/react';
-import { FaRegComment, FaRegThumbsUp, FaRegThumbsDown } from 'react-icons/fa';
+import { FaRegComment, FaHeart/*, FaRegThumbsDown*/ } from 'react-icons/fa';
 import formatDate from '../../utils/formatDate';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -12,8 +12,9 @@ function Post({
   auth,
   post: { _id, text, user, name, code, avatar, likes, comments, date }
 }) {
-  const currentLike = () => likes.map((like) => (like.user === auth.user._id ? 'teal' : ''));
-
+  const currentLike = () => likes.map((like) => (like.user === auth.user._id ? 'liked' : ''));
+  const colors = currentLike();
+  
   return (
     <Box
       mb='10px'
@@ -58,19 +59,18 @@ function Post({
         <Box w='20%' ml={2} d='flex' justifyContent='space-between'>
           <Box d='flex' alignItems='center'>
             <Icon
-              as={FaRegThumbsUp}
+              as={FaHeart}
               w={5}
               h={5}
               id='like'
               cursor='pointer'
-              color={currentLike}
-              onClick={(e) => addLike(_id)}
+              color={() => colors.includes('liked') ? 'tomato' : 'gray.400'}
+              onClick={() => colors.includes('liked') ? removeLike(_id) : addLike(_id)}
             />
             <Box as='span' ml={2}>
               {likes.length}
             </Box>
-
-            <Icon
+            {/* <Icon
               as={FaRegThumbsDown}
               id='dislike'
               onClick={(e) => removeLike(_id)}
@@ -79,7 +79,7 @@ function Post({
               cursor='pointer'
               w={5}
               h={5}
-            />
+            /> */}
           </Box>
           <Box d='flex' alignItems='center'>
             <Link to={`/post/${_id}`}>
