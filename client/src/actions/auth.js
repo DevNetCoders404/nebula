@@ -10,6 +10,7 @@ import {
 } from '../actions/types';
 import axios from 'axios';
 import setAuthToken from '../utils/setAuthToken';
+import { setAlert } from './alert';
 
 // load user
 export const loadUser = () => async (dispatch) => {
@@ -52,7 +53,13 @@ export const register =
       });
 
       dispatch(loadUser());
+      dispatch(setAlert('Account Created', 'success'));
     } catch (error) {
+      const errors = error.response.data.errors;
+
+      if (errors) {
+        errors.forEach((error) => dispatch(setAlert(error.msg, 'error')));
+      }
       dispatch({
         type: REGISTER_FAIL
       });
@@ -78,9 +85,14 @@ export const login =
         type: LOGIN_SUCCESS,
         payload: res.data
       });
-
       dispatch(loadUser());
+      dispatch(setAlert('Logged In', 'success'));
     } catch (error) {
+      const errors = error.response.data.errors;
+
+      if (errors) {
+        errors.forEach((error) => dispatch(setAlert(error.msg, 'error')));
+      }
       dispatch({
         type: LOGIN_FAIL
       });

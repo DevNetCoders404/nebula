@@ -80,7 +80,6 @@ function Dashboard({
   const handleAddGeneral = (e) => {
     e.preventDefault();
     addGeneral({ status, address, mobile, website });
-    console.log({ status, address, mobile, website });
   };
 
   const handleAddSocial = (e) => {
@@ -508,13 +507,6 @@ function Dashboard({
                     type='submit'
                     color='white'
                     style={{ backgroundColor: '#38B2AC' }}
-                    onClick={() => {
-                      toast({
-                        title: 'Profile Updated Successfully',
-                        status: 'success',
-                        isClosable: true
-                      });
-                    }}
                     position='absolute'
                     top='60px'
                   >
@@ -835,11 +827,6 @@ function Dashboard({
                           twitter.includes('https://twitter.com') ||
                           linkedin.includes('https://linkedin.com')
                         ) {
-                          toast({
-                            title: 'Social Media Added Successfully',
-                            status: 'success',
-                            isClosable: true
-                          });
                           setSocialMedia(true);
                         }
                       }}
@@ -1162,7 +1149,8 @@ function Dashboard({
                           toast({
                             title: 'Add Atleast one skill',
                             status: 'error',
-                            isClosable: true
+                            isClosable: true,
+                            duration: 2000,
                           });
                         } else if (
                           selectedLanguage1 !== '' ||
@@ -1199,7 +1187,8 @@ function Dashboard({
                           toast({
                             title: 'Skills Added Successfully',
                             status: 'success',
-                            isClosable: true
+                            isClosable: true,
+                            duration: 2000,
                           });
                           setSkills(true);
                         }
@@ -1212,7 +1201,6 @@ function Dashboard({
                   </FormControl>
 
                   <Button
-                    type='submit'
                     color='white'
                     style={{ backgroundColor: '#38B2AC' }}
                     onClick={skillEditHandler}
