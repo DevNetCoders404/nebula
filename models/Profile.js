@@ -5,45 +5,39 @@ const ProfileSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user'
   },
-  address: {
-    type: String
-  },
-  mobile: {
-    type: Number
-  },
-  website: {
-    type: String
-  },
   status: {
     type: String,
     required: true
   },
+  followers: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'user'
+    }
+  ],
+  following: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'user'
+    }
+  ],
   skills: [
     {
-      skillname: {
+      type: String
+    }
+  ],
+  socials: [
+    {
+      socialname: {
         type: String,
         required: true
       },
-      percent: {
+      link: {
         type: String,
         required: true
       }
     }
   ],
-  socials: {
-    facebook: {
-      type: String
-    },
-    twitter: {
-      type: String
-    },
-    github: {
-      type: String
-    },
-    linkedin: {
-      type: String
-    }
-  },
   date: {
     type: Date,
     default: Date.now
