@@ -2,7 +2,8 @@ const express = require('express');
 const router = express.Router();
 const { check, validatonResult, validationResult } = require('express-validator');
 const auth = require('../../middleware/auth');
-
+const http = require('http');
+const axios = require('axios');
 const Users = require('../../models/Users');
 const Profile = require('../../models/Profile');
 const Post = require('../../models/Post');
@@ -34,6 +35,24 @@ router.post('/', [auth, check('text', 'Text is required').not().isEmpty()], asyn
     console.error(err.message);
     res.status(500).send('Server Error');
   }
+});
+
+// @route   POST api/posts/codex
+// @desc    Execute the code
+// @access  Private
+router.post('/codex', async (req, res) => {
+  axios
+    .post('https://nervous-lizard-96.loca.lt/codeUpload', {
+      langid: req.body.langid,
+      code: req.body.code,
+      input: req.body.input
+    })
+    .then((d) => {
+      res.json(d.data);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
 });
 
 // @route   GET api/posts

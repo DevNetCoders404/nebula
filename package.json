@@ -28,6 +28,7 @@
     "express": "^4.17.1",
     "express-validator": "^6.12.0",
     "gravatar": "^1.8.1",
+    "http": "0.0.1-security",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.13.2",
     "normalize-url": "^7.0.0",
