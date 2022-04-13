@@ -42,7 +42,7 @@ router.post('/', [auth, check('text', 'Text is required').not().isEmpty()], asyn
 // @access  Private
 router.post('/codex', async (req, res) => {
   axios
-    .post('https://nervous-lizard-96.loca.lt/codeUpload', {
+    .post('http://129.154.224.3:80/codeUpload', {
       langid: req.body.langid,
       code: req.body.code,
       input: req.body.input
