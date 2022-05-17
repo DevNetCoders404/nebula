@@ -29,11 +29,7 @@ function SkillsPopOver({ getCurrentProfile, addSkills, profile: { profile }, dis
   }, [getCurrentProfile]);
 
   const [tagValue, setTagValue] = useState('');
-  const [taglist, setTagfield] = useState([
-    {
-      tag: ''
-    }
-  ]);
+  const [taglist, setTagfield] = useState([]);
   const { onOpen, onClose, isOpen } = useDisclosure();
   const firstFieldRef = React.useRef(null);
 
@@ -61,20 +57,21 @@ function SkillsPopOver({ getCurrentProfile, addSkills, profile: { profile }, dis
           >
             Add Tag
           </Button>
-          {taglist.map((taglist1, index) => (
-            <div key={index}>
-              {taglist1.tag !== '' && (
-                <Tag borderRadius='full' variant='solid' colorScheme='teal' display='inline-flex'>
-                  <TagLabel>{taglist1.tag}</TagLabel>
-                  <TagCloseButton
-                    onClick={() => {
-                      handleRemoveTag(index);
-                    }}
-                  />
-                </Tag>
-              )}
-            </div>
-          ))}
+          {profile &&
+            profile.skills.map((taglist1, index) => (
+              <div key={index}>
+                {taglist1 !== '' && (
+                  <Tag borderRadius='full' variant='solid' colorScheme='teal' display='inline-flex'>
+                    <TagLabel>{profile.skills[index]}</TagLabel>
+                    <TagCloseButton
+                      onClick={() => {
+                        handleRemoveTag(index);
+                      }}
+                    />
+                  </Tag>
+                )}
+              </div>
+            ))}
         </FormControl>
         <ButtonGroup d='flex' justifyContent='flex-end'>
           <Button variant='outline' onClick={onCancel} color='teal'>
@@ -89,23 +86,17 @@ function SkillsPopOver({ getCurrentProfile, addSkills, profile: { profile }, dis
     if (tagValue === '') {
       return;
     }
-    let flag = false;
-    taglist.map((taglist1, index) => {
-      if (taglist1.tag.toUpperCase() === tagValue.toUpperCase()) {
-        flag = true;
-      }
-    });
-    if (flag) {
-      return;
-    }
-    setTagfield([...taglist, { tag: tagValue }]);
-    addSkills(taglist)
+    let skills = [];
+    taglist.push(tagValue);
+    skills = [...new Set([...profile.skills, ...taglist])];
+    console.log(skills);
+    addSkills(skills);
   };
 
   const handleRemoveTag = (index) => {
-    const values = [...taglist];
-    values.splice(index, 1);
-    setTagfield(values);
+    const skills = [...new Set([...profile.skills, ...taglist])];
+    skills.splice(index, 1);
+    addSkills(skills);
   };
   return (
     <div>
@@ -136,15 +127,14 @@ function SkillsPopOver({ getCurrentProfile, addSkills, profile: { profile }, dis
         </PopoverContent>
       </Popover>
 
-      {profile && profile.skills.map((taglist1, index) => (
-        <div key={index}>
-          <Text marginTop='5px' fontSize='17px' fontWeight={600} style={{ color: 'white' }}>
-            {
-              profile.skills[index].skillname
-            }
-          </Text>
-        </div>
-      ))}
+      {profile &&
+        profile.skills.map((taglist1, index) => (
+          <div key={index}>
+            <Text marginTop='5px' fontSize='17px' fontWeight={600} style={{ color: 'white' }}>
+              {profile.skills[index]}
+            </Text>
+          </div>
+        ))}
     </div>
   );
 }

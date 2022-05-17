@@ -44,7 +44,7 @@ export const addGeneral =
   };
 
 export const addSocial =
-  ({ socials }) =>
+  (socials) =>
   async (dispatch) => {
     const config = {
       headers: {
@@ -71,7 +71,7 @@ export const addSocial =
   };
 
 export const addSkills =
-  ({ skills }) =>
+  ( skills ) =>
   async (dispatch) => {
     const config = {
       headers: {
@@ -79,7 +79,7 @@ export const addSkills =
       }
     };
 
-    const body = JSON.stringify(skills);
+    const body = JSON.stringify({skills});
 
     try {
       const res = await axios.post('/api/profile/skills', body, config);

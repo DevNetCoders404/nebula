@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Popover,
   PopoverTrigger,
@@ -21,19 +21,18 @@ import {
 } from '@chakra-ui/react';
 import { EditIcon } from '@chakra-ui/icons';
 import ReactFocusLock from 'react-focus-lock';
-import { addSocial } from '../../actions/profile';
+import { getCurrentProfile, addSocial } from '../../actions/profile';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-function SocialMediaPopOver({ display }) {
+function SocialMediaPopOver({ getCurrentProfile, addSocial, profile: { profile }, display }) {
+  useEffect(() => {
+    getCurrentProfile();
+  }, [getCurrentProfile]);
+
   const { onOpen, onClose, isOpen } = useDisclosure();
   const firstFieldRef = React.useRef(null);
-  const [sociallist, setSocialfield] = useState([
-    {
-      mediaName: '',
-      link: ''
-    }
-  ]);
+  const [sociallist, setSocialfield] = useState([]);
   const [mediaValue, setMediaValue] = useState('');
   const [mediaLinkValue, setMediaLinkValue] = useState('');
   const [focus, setFocus] = useState(false);
@@ -89,20 +88,21 @@ function SocialMediaPopOver({ display }) {
           >
             Add Media
           </Button>
-          {sociallist.map((sociallist1, index) => (
-            <div key={index}>
-              {sociallist1.mediaName !== '' && (
-                <Tag borderRadius='full' variant='solid' colorScheme='teal' display='inline-flex'>
-                  <TagLabel>{sociallist1.mediaName}</TagLabel>
-                  <TagCloseButton
-                    onClick={() => {
-                      handleRemoveMediaTag(index);
-                    }}
-                  />
-                </Tag>
-              )}
-            </div>
-          ))}
+          {profile &&
+            profile.socials.map((sociallist1, index) => (
+              <div key={index}>
+                {sociallist1.socialname !== '' && (
+                  <Tag borderRadius='full' variant='solid' colorScheme='teal' display='inline-flex'>
+                    <TagLabel>{profile.socials[index].socialname}</TagLabel>
+                    <TagCloseButton
+                      onClick={() => {
+                        handleRemoveMediaTag(index);
+                      }}
+                    />
+                  </Tag>
+                )}
+              </div>
+            ))}
         </FormControl>
         <ButtonGroup d='flex' justifyContent='flex-end'>
           <Button variant='outline' onClick={onCancel} color='teal'>
@@ -118,27 +118,29 @@ function SocialMediaPopOver({ display }) {
       return;
     }
 
-    let flag = false;
-    sociallist.map((sociallist1, index) => {
-      if (sociallist1.mediaName.toUpperCase() === mediaValue.toUpperCase()) {
-        flag = true;
-      }
-    });
-
-    if (flag) {
-      return;
-    }
+    let socials = [];
 
     if (mediaLinkValue.includes('https://') && mediaLinkValue.includes('.')) {
-      setSocialfield([...sociallist, { mediaName: mediaValue, link: mediaLinkValue }]);
+      sociallist.push({ socialname: mediaValue, link: mediaLinkValue });
+      socials = [...profile.socials, ...sociallist];
+      socials = socials.filter(
+        (val, ind, self) =>
+          ind === self.findIndex((t) => t.socialname === val.socialname && t.link === val.link)
+      );
     }
-    addSocial(sociallist)
+    console.log(socials);
+    addSocial(socials);
   };
 
   const handleRemoveMediaTag = (index) => {
-    const values = [...sociallist];
-    values.splice(index, 1);
-    setSocialfield(values);
+    let socials = [...profile.socials, ...sociallist];
+    socials = socials.filter(
+      (val, ind, self) =>
+        ind === self.findIndex((t) => t.socialname === val.socialname && t.link === val.link)
+    );
+    socials.splice(index, 1);
+    setSocialfield(socials);
+    addSocial(socials);
   };
   return (
     <div>
@@ -168,32 +170,33 @@ function SocialMediaPopOver({ display }) {
           </ReactFocusLock>
         </PopoverContent>
       </Popover>
-      {sociallist.map((sociallist1, index) => (
-        <div key={index}>
-          <Link
-            href={sociallist1.link}
-            style={{ textDecoration: 'none' }}
-            _focus={{ outline: 'none' }}
-          >
-            <Text marginTop='5px' fontSize='17px' style={{ color: 'white' }}>
-              {sociallist1.mediaName}
-            </Text>
-          </Link>
-        </div>
-      ))}
+      {profile &&
+        profile.socials.map((sociallist1, index) => (
+          <div key={index}>
+            <Link
+              href={profile.socials[index].link}
+              style={{ textDecoration: 'none' }}
+              _focus={{ outline: 'none' }}
+              isExternal
+            >
+              <Text marginTop='5px' fontSize='17px' style={{ color: 'white' }}>
+                {profile.socials[index].socialname}
+              </Text>
+            </Link>
+          </div>
+        ))}
     </div>
   );
 }
 
 SocialMediaPopOver.propTypes = {
+  getCurrentProfile: PropTypes.func.isRequired,
   addSocial: PropTypes.func.isRequired,
-  auth: PropTypes.object.isRequired,
   profile: PropTypes.object.isRequired
 };
 
 const mapStateToProps = (state) => ({
-  auth: state.auth,
   profile: state.profile
 });
 
-export default connect(mapStateToProps, { addSocial })(SocialMediaPopOver);
+export default connect(mapStateToProps, { addSocial, getCurrentProfile })(SocialMediaPopOver);
