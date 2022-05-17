@@ -28,6 +28,7 @@ const ProfileSchema = mongoose.Schema({
   ],
   socials: [
     {
+      _id: false,
       socialname: {
         type: String,
         required: true
