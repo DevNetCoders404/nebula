@@ -19,18 +19,20 @@ import { addGeneral } from '../../actions/profile';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-function NamePopOver({ name, setName, display }) {
+function NamePopOver({ addGeneral, name, setName, display }) {
   const { onOpen, onClose, isOpen } = useDisclosure();
   const [name1, setName1] = useState('');
   const save = () => {
     let name2 = [];
+    const name = name1;
     if (name1.length > 12) {
       name2 = name1.split(' ');
-      console.log(name2[0]);
       setName(name2[0]);
+      addGeneral({ name });
       return;
     }
     setName(name1);
+    addGeneral({ name });
   };
   const Name = ({ onCancel }) => {
     return (

@@ -15,7 +15,7 @@ function Post({
 }) {
   const currentLike = () => likes.map((like) => (like.user === auth.user._id ? 'liked' : ''));
   const colors = currentLike();
-  
+
   return (
     <Box
       mb='10px'
@@ -29,10 +29,23 @@ function Post({
       borderRadius='lg'
     >
       <Flex display='flex' alignItems='center'>
-        <Avatar src={avatar}></Avatar>
-        <Text ml={5}>{name}</Text>
+        <Link to={`/profile/${user}`}>
+          <Avatar src={avatar}></Avatar>
+        </Link>
+        <Link to={`/profile/${user}`}>
+          <Text ml={5}>{name}</Text>
+        </Link>
         {!auth.loading && user === auth.user._id && (
-          <Icon as={FaTrash} cursor='pointer' ml='auto' mr={10} w={4} h={4} color='red.400' onClick={() => removePost(_id)}></Icon>
+          <Icon
+            as={FaTrash}
+            cursor='pointer'
+            ml='auto'
+            mr={10}
+            w={4}
+            h={4}
+            color='red.400'
+            onClick={() => removePost(_id)}
+          ></Icon>
         )}
       </Flex>
       <Text ml='70px' mt={5}>
@@ -68,8 +81,8 @@ function Post({
               h={5}
               id='like'
               cursor='pointer'
-              color={() => colors.includes('liked') ? 'tomato' : 'gray.400'}
-              onClick={() => colors.includes('liked') ? removeLike(_id) : addLike(_id)}
+              color={() => (colors.includes('liked') ? 'tomato' : 'gray.400')}
+              onClick={() => (colors.includes('liked') ? removeLike(_id) : addLike(_id))}
             />
             <Box as='span' ml={2}>
               {likes.length}

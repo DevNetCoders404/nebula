@@ -29,7 +29,7 @@ function SkillsPopOver({ getCurrentProfile, addSkills, profile: { profile }, dis
   }, [getCurrentProfile]);
 
   const [tagValue, setTagValue] = useState('');
-  const [taglist, setTagfield] = useState([]);
+  const taglist = [];
   const { onOpen, onClose, isOpen } = useDisclosure();
   const firstFieldRef = React.useRef(null);
 
@@ -89,7 +89,6 @@ function SkillsPopOver({ getCurrentProfile, addSkills, profile: { profile }, dis
     let skills = [];
     taglist.push(tagValue);
     skills = [...new Set([...profile.skills, ...taglist])];
-    console.log(skills);
     addSkills(skills);
   };
 

@@ -1,7 +1,8 @@
-import { CLEAR_PROFILE, GET_PROFILE, PROFILE_ERROR } from '../actions/types';
+import { CLEAR_PROFILE, GET_PROFILE, OTHER_USER, PROFILE_ERROR } from '../actions/types';
 
 const initialState = {
   profile: null,
+  other_user: null,
   profiles: [],
   loading: true,
   error: {}
@@ -17,6 +18,12 @@ const profile = (state = initialState, action) => {
         profile: payload,
         loading: false
       };
+    case OTHER_USER:
+      return {
+        ...state,
+        other_user: payload,
+        loading: false
+      }
     case PROFILE_ERROR:
       return {
         ...state,

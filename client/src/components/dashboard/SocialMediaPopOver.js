@@ -128,7 +128,6 @@ function SocialMediaPopOver({ getCurrentProfile, addSocial, profile: { profile }
           ind === self.findIndex((t) => t.socialname === val.socialname && t.link === val.link)
       );
     }
-    console.log(socials);
     addSocial(socials);
   };
 

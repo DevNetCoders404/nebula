@@ -14,6 +14,7 @@ import PrivateRoute from './components/routing/PrivateRoute';
 import Feed from './components/feed/Feed';
 import Editor from './components/feed/Editor';
 import PostThread from './components/thread/PostThread';
+import Profile from './components/profile/Profile';
 
 if (localStorage.token) {
   setAuthToken(localStorage.token);
@@ -34,6 +35,7 @@ function App() {
             <Route exact path='/sign-up' component={Signup}></Route>
             <Route exact path='/log-in' component={Login}></Route>
             <PrivateRoute exact path='/dashboard' component={Dashboard}></PrivateRoute>
+            <Route exact path='/profile/:user' component={Profile}></Route>
             <PrivateRoute exact path='/feed' component={Feed}></PrivateRoute>
             <PrivateRoute exact path='/editor' component={Editor}></PrivateRoute>
             <PrivateRoute exact path='/post/:id' component={PostThread}></PrivateRoute>

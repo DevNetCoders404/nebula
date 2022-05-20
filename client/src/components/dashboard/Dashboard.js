@@ -29,9 +29,9 @@ function Dashboard({ getCurrentProfile, auth: { user }, profile: { profile } }) 
     getCurrentProfile();
   }, [getCurrentProfile]);
 
-  const [name, setName] = useState(user && user.name);
-  const [status, setStatus] = useState('Web Developer');
-  const [followEdit, setFollowEdit] = useState(true);
+  const [name, setName] = useState('');
+  const [status, setStatus] = useState('');
+  const followEdit = true;
   const [display, setDisplay] = useState('none');
   const displayHandler = () => {
     if (display === 'none') {
@@ -44,9 +44,10 @@ function Dashboard({ getCurrentProfile, auth: { user }, profile: { profile } }) 
     <div>
       <Navbar />
       <Grid
-        h='200px'
+        h='100%'
         templateColumns='repeat(5, 1fr)'
         marginTop='10%'
+        marginBottom='5%'
         marginLeft={{ md: '5%', lg: '15%', xl: '25%', '2xl': '25%', '3xl': '25%' }}
       >
         <GridItem
@@ -102,7 +103,7 @@ function Dashboard({ getCurrentProfile, auth: { user }, profile: { profile } }) 
               marginLeft='15%'
               color='white'
             >
-              {followEdit === false ? 'Follow' : 'Edit Profile'}
+              Edit Profile
             </Button>
           </Box>
           <Text color='#38B2AC' fontSize='18px' marginTop='10px' marginLeft='5%'>
@@ -144,9 +145,9 @@ function Dashboard({ getCurrentProfile, auth: { user }, profile: { profile } }) 
             <TabPanels>
               <TabPanel>
                 <Text fontWeight='bold' display='inline-flex'>
-                  User Id
+                  Username
                   <Text fontWeight='normal' marginLeft='80px' color='#38B2AC' id='userId'>
-                    yashvshinde
+                    {user && user.username}
                   </Text>
                 </Text>
                 <br></br>
@@ -160,7 +161,7 @@ function Dashboard({ getCurrentProfile, auth: { user }, profile: { profile } }) 
                     id='userId'
                     display='inline-flex'
                   >
-                    {name}
+                    {user && user.name}
                     <NamePopOver name={name} setName={setName} display={display} />
                   </Text>
                 </Text>
