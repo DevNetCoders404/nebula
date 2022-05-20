@@ -17,6 +17,7 @@ import { Link, Redirect } from 'react-router-dom';
 import { login } from '../../actions/auth';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import Navbar from '../layout/Navbar';
 
 function Login({ login, isAuthenticated }) {
   const [formData, setFormData] = useState({
@@ -41,8 +42,10 @@ function Login({ login, isAuthenticated }) {
 
   return (
     <div className='log-in'>
+      <Navbar />
       <Flex
-        height='100vh'
+        height='100%'
+        marginTop='10%'
         alignItems='center'
         justifyContent={['center', 'center', 'flex-end', 'flex-end', 'flex-end']}
         mr={['none', 'none', '30px', '30px', '300px']}

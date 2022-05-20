@@ -17,21 +17,23 @@ import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { register } from '../../actions/auth';
 import PropTypes from 'prop-types';
+import Navbar from '../layout/Navbar';
 
 function Signup({ register, isAuthenticated }) {
   const [formData, setFormData] = useState({
     name: '',
+    username: '',
     email: '',
     password: ''
   });
 
-  const { name, email, password } = formData;
+  const { name, username, email, password } = formData;
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    register({ name, email, password });
+    register({ name, username, email, password });
   };
 
   const [showPassword, setShowPassword] = useState(false);
@@ -44,15 +46,18 @@ function Signup({ register, isAuthenticated }) {
 
   return (
     <div className='sign-up'>
+      <Navbar />
       <Flex
-        height='100vh'
+        height='100%'
+        marginTop='10%'
+        marginBottom='5%'
         alignItems='center'
         justifyContent={['center', 'center', 'flex-end', 'flex-end', 'flex-end']}
         mr={['none', 'none', '30px', '30px', '300px']}
       >
         <Flex
           direction='column'
-          height={['100vh', '100vh', '98vh', '98vh', '90vh']}
+          height={['100%', '100%', '100%', '100%', '100%']}
           width={['100%', '100%', '350px', '350px', '350px']}
           rounded={6}
           p={12}
@@ -71,6 +76,18 @@ function Signup({ register, isAuthenticated }) {
                   type='text'
                   name='name'
                   value={name}
+                  onChange={handleChange}
+                ></Input>
+              </FormControl>
+
+              <FormControl>
+                <FormLabel htmlFor='username'>Username</FormLabel>
+                <Input
+                  variant='filled'
+                  isRequired
+                  type='text'
+                  name='username'
+                  value={username}
                   onChange={handleChange}
                 ></Input>
               </FormControl>
