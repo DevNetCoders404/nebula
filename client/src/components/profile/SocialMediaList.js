@@ -32,7 +32,6 @@ function SocialMediaList({ getProfileById, profile: { other_user }, user }) {
 
 SocialMediaList.propTypes = {
   getProfileById: PropTypes.func.isRequired,
-  addSocial: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired
 };
 

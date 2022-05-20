@@ -22,7 +22,6 @@ import Dashboard from '../dashboard/Dashboard';
 import { getProfileById } from '../../actions/profile';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Redirect } from 'react-router-dom';
 
 function Profile({ getProfileById, auth: { user }, profile: { other_user }, match }) {
   useEffect(() => {
@@ -32,7 +31,7 @@ function Profile({ getProfileById, auth: { user }, profile: { other_user }, matc
   const logged_user = user && user._id;
   const visit_user = other_user && other_user.user._id;
   if (logged_user === visit_user) {
-    return <Redirect to='/dashboard' />;
+    return <Dashboard />;
   }
   return (
     <div>
