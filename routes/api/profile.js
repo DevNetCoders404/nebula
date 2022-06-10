@@ -5,6 +5,7 @@ const router = express.Router();
 const auth = require('../../middleware/auth');
 const Profile = require('../../models/Profile');
 const User = require('../../models/Users');
+const Post = require('../../models/Post');
 
 const { check, validationResult } = require('express-validator');
 
@@ -308,6 +309,36 @@ router.put('/unfollow/:uid', auth, async (req, res) => {
     console.error(err.message);
     if (err.kind === 'ObjectId') {
       return res.status(404).json({ msg: 'Prof not found' });
+    }
+    res.status(500).send('Server Error');
+  }
+});
+
+// @route   GET api/profile/stat/:id
+// @desc    get stat of user
+// @access  Public
+router.get('/stat/:id', async (req, res) => {
+  try {
+    const profiles = await Profile.findOne({ user: req.params.id });
+    const posts = await Post.find({ user: req.params.id });
+
+    if (!profiles) {
+      return res.status(400).json({ msg: 'Profile not found' });
+    }
+
+    if (!posts) {
+      return res.status(400).json({ msg: 'Post not found' });
+    }
+
+    let followcount = profiles.followers.length;
+    let followingcount = profiles.following.length;
+    let postcount = posts.length;
+
+    res.json({ followers: followcount, following: followingcount, post: postcount });
+  } catch (err) {
+    console.log(err.message);
+    if (err.kind == 'ObjectId') {
+      return res.status(400).json({ msg: 'Profile not found' });
     }
     res.status(500).send('Server Error');
   }
