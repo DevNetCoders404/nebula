@@ -232,4 +232,85 @@ router.delete('/', auth, async (req, res) => {
   }
 });
 
+// @route   PUT api/profile/follow/:id
+// @desc    follow user by ID
+// @access  Private
+router.put('/follow/:uid', auth, async (req, res) => {
+  try {
+    const profile1 = await Profile.findOne({ user: req.params.uid });
+    const profile2 = await Profile.findOne({ user: req.user.id });
+
+    if (!profile2) {
+      console.log(profile2);
+      return res.status(404).json({ msg: 'User2 not found' });
+    }
+
+    if (!profile1) {
+      return res.status(404).json({ msg: 'User1 not found' });
+    }
+
+    if (profile1.followers.filter((follow) => follow.user.toString() === req.user.id).length > 0) {
+      return res.status(400).json({ msg: 'Already follows' });
+    }
+
+    profile1.followers.unshift({ user: req.user.id });
+    profile2.following.unshift({ user: req.params.uid });
+    await profile1.save();
+    await profile2.save();
+
+    res.json({ msg: 'User followed' });
+  } catch (err) {
+    console.error(err.message);
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ msg: 'Prof not found' });
+    }
+    res.status(500).send('Server Error');
+  }
+});
+
+// @route   PUT api/profile/unfollow/:id
+// @desc    unfollow user by ID
+// @access  Private
+router.put('/unfollow/:uid', auth, async (req, res) => {
+  try {
+    const profile1 = await Profile.findOne({ user: req.params.uid });
+    const profile2 = await Profile.findOne({ user: req.user.id });
+
+    if (!profile2) {
+      console.log(profile2);
+      return res.status(404).json({ msg: 'User2 not found' });
+    }
+
+    if (!profile1) {
+      return res.status(404).json({ msg: 'User1 not found' });
+    }
+
+    if (
+      profile1.followers.filter((follow) => follow.user.toString() === req.user.id).length === 0
+    ) {
+      return res.status(400).json({ msg: 'Not following' });
+    }
+
+    const removeIndex1 = profile1.followers
+      .map((follow) => follow.user.toString())
+      .indexOf(req.user.id);
+    const removeIndex2 = profile2.following
+      .map((follow) => follow.user.toString())
+      .indexOf(req.params.id);
+
+    profile1.followers.splice(removeIndex1, 1);
+    profile2.following.splice(removeIndex2, 1);
+    await profile1.save();
+    await profile2.save();
+
+    res.json({ msg: 'User unfollowed' });
+  } catch (err) {
+    console.error(err.message);
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ msg: 'Prof not found' });
+    }
+    res.status(500).send('Server Error');
+  }
+});
+
 module.exports = router;
