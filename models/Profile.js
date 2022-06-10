@@ -11,14 +11,18 @@ const ProfileSchema = mongoose.Schema({
   },
   followers: [
     {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'user'
+      user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'users'
+      }
     }
   ],
   following: [
     {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'user'
+      user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'users'
+      }
     }
   ],
   skills: [
