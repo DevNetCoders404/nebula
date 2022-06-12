@@ -21,3 +21,4 @@ export const ADD_COMMENT = 'ADD_COMMENT';
 export const REMOVE_COMMENT = 'REMOVE_COMMENT';
 export const CODEX_RESULT = 'CODEX_RESULT';
 export const CODEX_ERROR = 'CODEX_ERROR';
+export const UPDATE_FOLLOW = 'UPDATE_FOLLOW';

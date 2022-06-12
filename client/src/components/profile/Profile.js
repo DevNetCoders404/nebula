@@ -19,17 +19,21 @@ import SkillsList from './SkillsList';
 import SocialMediaList from './SocialMediaList';
 import Navbar from '../layout/Navbar';
 import Dashboard from '../dashboard/Dashboard';
-import { getProfileById } from '../../actions/profile';
+import { getProfileById, follow, unfollow } from '../../actions/profile';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 function Profile({ getProfileById, auth: { user }, profile: { other_user }, match }) {
   useEffect(() => {
     getProfileById(match.params.user);
-  }, [getProfileById, match.params.user]);
+  }, [getProfileById, match.params.user, other_user]);
 
   const logged_user = user && user._id;
   const visit_user = other_user && other_user.user._id;
+  const f = other_user && other_user.followers;
+  const currentFollow = () => f && f.map((follow) => (follow.user === logged_user ? 'unfollow' : ''));
+  const currentFollowStr = currentFollow();
+
   if (logged_user === visit_user) {
     return <Dashboard />;
   }
@@ -87,11 +91,11 @@ function Profile({ getProfileById, auth: { user }, profile: { other_user }, matc
               borderRadius='full'
               display='inline-flex'
               style={{ backgroundColor: '#38B2AC' }}
-              onClick={() => {}}
+              onClick={currentFollowStr && currentFollowStr.includes('unfollow') ? unfollow(visit_user) : follow(visit_user)}
               marginLeft='15%'
               color='white'
             >
-              Follow
+              {currentFollowStr && currentFollowStr.includes('unfollow') ? "unfollow" : "follow"}
             </Button>
           </Box>
           <Text color='#38B2AC' fontSize='18px' marginTop='10px' marginLeft='5%'>
