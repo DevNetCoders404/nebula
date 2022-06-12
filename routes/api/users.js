@@ -7,6 +7,7 @@ const jwt = require('jsonwebtoken');
 const { check, validationResult } = require('express-validator');
 
 // Importing User Model
+const auth = require('../../middleware/auth');
 const User = require('../../models/Users');
 
 // @route   POST api/users
@@ -83,5 +84,35 @@ router.post(
     }
   }
 );
+
+// @route   PUT api/users/name
+// @desc    change name of user
+// @access  Private
+router.put('/name', auth, async (req, res) => {
+  try {
+    let user = await User.findById(req.user.id);
+
+    if (!user) {
+      return res.status(404).json({ msg: 'User not found' });
+    }
+
+    const { name } = req.body;
+
+    if (!name) {
+      return res.status(400).json({ msg: 'Name required' });
+    }
+
+    user.name = name;
+    await user.save();
+
+    res.send('Name changed');
+  } catch (err) {
+    console.error(err.message);
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ msg: 'Post not found' });
+    }
+    res.status(500).send('Server Error');
+  }
+});
 
 module.exports = router;
