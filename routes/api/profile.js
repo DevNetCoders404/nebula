@@ -321,6 +321,7 @@ router.get('/stat/:id', async (req, res) => {
   try {
     const profiles = await Profile.findOne({ user: req.params.id });
     const posts = await Post.find({ user: req.params.id });
+    const user = await User.findOne({ _id: req.params.id });
 
     if (!profiles) {
       return res.status(400).json({ msg: 'Profile not found' });
@@ -333,8 +334,14 @@ router.get('/stat/:id', async (req, res) => {
     let followcount = profiles.followers.length;
     let followingcount = profiles.following.length;
     let postcount = posts.length;
+    let user2 = JSON.parse(JSON.stringify(user));
 
-    res.json({ followers: followcount, following: followingcount, post: postcount });
+    res.json({
+      followers: followcount,
+      following: followingcount,
+      post: postcount,
+      points: user2.points
+    });
   } catch (err) {
     console.log(err.message);
     if (err.kind == 'ObjectId') {
