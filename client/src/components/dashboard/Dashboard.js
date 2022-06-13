@@ -20,14 +20,15 @@ import SocialMediaPopOver from './SocialMediaPopOver';
 import NamePopOver from './NamePopOver';
 import StatusPopOver from './StatusPopOver';
 import Navbar from '../layout/Navbar';
-import { getCurrentProfile } from '../../actions/profile';
+import { getCurrentProfile, getProfileStats } from '../../actions/profile';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-function Dashboard({ getCurrentProfile, auth: { user }, profile: { profile } }) {
+function Dashboard({ getCurrentProfile, auth: { user }, profile: { profile, stats }, getProfileStats }) {
   useEffect(() => {
     getCurrentProfile();
-  }, [getCurrentProfile]);
+    user && getProfileStats(user._id);
+  }, [getCurrentProfile, getProfileStats, user]);
 
   const [name, setName] = useState('');
   const [status, setStatus] = useState('');
@@ -40,6 +41,7 @@ function Dashboard({ getCurrentProfile, auth: { user }, profile: { profile } }) 
       setDisplay('none');
     }
   };
+
   return (
     <div>
       <Navbar />
@@ -112,23 +114,30 @@ function Dashboard({ getCurrentProfile, auth: { user }, profile: { profile } }) 
 
           <Box marginTop='10px' marginLeft='5%'>
             <Flex display='inline-flex'>
-              <Text>300</Text>
+              <Text>{stats && !stats.loading && stats.post}</Text>
               <Text marginLeft='10px' fontWeight='bold'>
                 Posts
               </Text>
             </Flex>
 
             <Flex display='inline-flex'>
-              <Text marginLeft='10px'>300</Text>
+              <Text marginLeft='10px'>{stats && !stats.loading && stats.followers}</Text>
               <Text marginLeft='10px' fontWeight='bold'>
                 Followers
               </Text>
             </Flex>
 
             <Flex display='inline-flex'>
-              <Text marginLeft='10px'>100</Text>
+              <Text marginLeft='10px'>{stats && !stats.loading && stats.following}</Text>
               <Text marginLeft='10px' fontWeight='bold'>
                 Following
+              </Text>
+            </Flex>
+
+            <Flex display='inline-flex'>
+              <Text marginLeft='10px'>{stats && !stats.loading && stats.points}x</Text>
+              <Text marginLeft='10px' fontWeight='bold'>
+                Points
               </Text>
             </Flex>
           </Box>
@@ -199,6 +208,7 @@ function Dashboard({ getCurrentProfile, auth: { user }, profile: { profile } }) 
 
 Dashboard.propTypes = {
   getCurrentProfile: PropTypes.func.isRequired,
+  getProfileStats: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   profile: PropTypes.object.isRequired
 };
@@ -208,4 +218,4 @@ const mapStateToProps = (state) => ({
   profile: state.profile
 });
 
-export default connect(mapStateToProps, { getCurrentProfile })(Dashboard);
+export default connect(mapStateToProps, { getCurrentProfile, getProfileStats })(Dashboard);

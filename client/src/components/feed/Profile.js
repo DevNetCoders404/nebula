@@ -1,13 +1,19 @@
 import React, { useEffect } from 'react';
-import { Box, Image, Text } from '@chakra-ui/react';
+import { Box, Flex, Image, Text } from '@chakra-ui/react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { getCurrentProfile } from '../../actions/profile';
+import { getCurrentProfile, getProfileStats } from '../../actions/profile';
 
-function Profile({ getCurrentProfile, profile: { profile }, auth: {user} }) {
+function Profile({
+  getCurrentProfile,
+  profile: { profile, stats },
+  auth: { user },
+  getProfileStats
+}) {
   useEffect(() => {
     getCurrentProfile();
-  }, [getCurrentProfile]);
+    user && getProfileStats(user._id);
+  }, [getCurrentProfile, getProfileStats, user]);
 
   return (
     <div>
@@ -52,14 +58,82 @@ function Profile({ getCurrentProfile, profile: { profile }, auth: {user} }) {
           >
             {profile && profile.status ? profile.status : '---'}
           </Text>
-          <Text
+          {/* <Text
             align='center'
             fontFamily='ubuntu'
             color='GrayText'
             fontSize={['15', '15', '17', '18', '18']}
           >
             {profile && profile.address ? profile.address : '---'}
-          </Text>
+          </Text> */}
+          <Flex justifyContent="space-evenly">
+            <Text
+              align='center'
+              fontFamily='ubuntu'
+              color='GrayText'
+              fontSize={['15', '15', '17', '18', '18']}
+            >
+              Followers
+            </Text>
+            <Text
+              align='center'
+              fontFamily='ubuntu'
+              color='GrayText'
+              fontSize={['15', '15', '17', '18', '18']}
+            >
+              {stats && !stats.loading && stats.followers}
+            </Text>
+            <Text
+              align='center'
+              fontFamily='ubuntu'
+              color='GrayText'
+              fontSize={['15', '15', '17', '18', '18']}
+            >
+              Following
+            </Text>
+            <Text
+              align='center'
+              fontFamily='ubuntu'
+              color='GrayText'
+              fontSize={['15', '15', '17', '18', '18']}
+            >
+              {stats && !stats.loading && stats.following}
+            </Text>
+          </Flex>
+          <Flex justifyContent="space-evenly">
+            <Text
+              align='center'
+              fontFamily='ubuntu'
+              color='GrayText'
+              fontSize={['15', '15', '17', '18', '18']}
+            >
+              Posts
+            </Text>
+            <Text
+              align='center'
+              fontFamily='ubuntu'
+              color='GrayText'
+              fontSize={['15', '15', '17', '18', '18']}
+            >
+              {stats && !stats.loading && stats.post}
+            </Text>
+            <Text
+              align='center'
+              fontFamily='ubuntu'
+              color='GrayText'
+              fontSize={['15', '15', '17', '18', '18']}
+            >
+              Points
+            </Text>
+            <Text
+              align='center'
+              fontFamily='ubuntu'
+              color='GrayText'
+              fontSize={['15', '15', '17', '18', '18']}
+            >
+              {stats && !stats.loading && stats.points}
+            </Text>
+          </Flex>
         </Box>
       </Box>
     </div>
@@ -69,7 +143,8 @@ function Profile({ getCurrentProfile, profile: { profile }, auth: {user} }) {
 Profile.propTypes = {
   profile: PropTypes.object.isRequired,
   getCurrentProfile: PropTypes.func.isRequired,
-  auth: PropTypes.object.isRequired,
+  getProfileStats: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired
 };
 
 const mapStateToProps = (state) => ({
@@ -77,4 +152,4 @@ const mapStateToProps = (state) => ({
   auth: state.auth
 });
 
-export default connect(mapStateToProps, { getCurrentProfile })(Profile);
+export default connect(mapStateToProps, { getCurrentProfile, getProfileStats })(Profile);

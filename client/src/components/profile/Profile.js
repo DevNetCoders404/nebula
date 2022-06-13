@@ -19,14 +19,15 @@ import SkillsList from './SkillsList';
 import SocialMediaList from './SocialMediaList';
 import Navbar from '../layout/Navbar';
 import Dashboard from '../dashboard/Dashboard';
-import { getProfileById, follow, unfollow } from '../../actions/profile';
+import { getProfileById, follow, unfollow, getProfileStats } from '../../actions/profile';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-function Profile({ getProfileById, auth: { user }, profile: { other_user }, match }) {
+function Profile({ getProfileById, auth: { user }, profile: { other_user, stats }, match, getProfileStats }) {
   useEffect(() => {
     getProfileById(match.params.user);
-  }, [getProfileById, match.params.user, other_user]);
+    getProfileStats(match.params.user);
+  }, [getProfileById, match.params.user, getProfileStats]);
 
   const logged_user = user && user._id;
   const visit_user = other_user && other_user.user._id;
@@ -104,23 +105,30 @@ function Profile({ getProfileById, auth: { user }, profile: { other_user }, matc
 
           <Box marginTop='10px' marginLeft='5%'>
             <Flex display='inline-flex'>
-              <Text>300</Text>
+              <Text>{stats && !stats.loading && stats.post}</Text>
               <Text marginLeft='10px' fontWeight='bold'>
                 Posts
               </Text>
             </Flex>
 
             <Flex display='inline-flex'>
-              <Text marginLeft='10px'>300</Text>
+              <Text marginLeft='10px'>{stats && !stats.loading && stats.followers}</Text>
               <Text marginLeft='10px' fontWeight='bold'>
                 Followers
               </Text>
             </Flex>
 
             <Flex display='inline-flex'>
-              <Text marginLeft='10px'>100</Text>
+              <Text marginLeft='10px'>{stats && !stats.loading && stats.following}</Text>
               <Text marginLeft='10px' fontWeight='bold'>
                 Following
+              </Text>
+            </Flex>
+
+            <Flex display='inline-flex'>
+              <Text marginLeft='10px'>{stats && !stats.loading && stats.points}x</Text>
+              <Text marginLeft='10px' fontWeight='bold'>
+                Points
               </Text>
             </Flex>
           </Box>
@@ -189,6 +197,7 @@ function Profile({ getProfileById, auth: { user }, profile: { other_user }, matc
 
 Dashboard.propTypes = {
   getProfileById: PropTypes.func.isRequired,
+  getProfileStats: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   profile: PropTypes.object.isRequired
 };
@@ -198,4 +207,4 @@ const mapStateToProps = (state) => ({
   profile: state.profile
 });
 
-export default connect(mapStateToProps, { getProfileById })(Profile);
+export default connect(mapStateToProps, { getProfileById, getProfileStats })(Profile);

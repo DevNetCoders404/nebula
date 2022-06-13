@@ -1,4 +1,4 @@
-import { GET_PROFILE, PROFILE_ERROR, OTHER_USER, CLEAR_PROFILE, UPDATE_FOLLOW } from './types';
+import { GET_PROFILE, PROFILE_ERROR, OTHER_USER, CLEAR_PROFILE, UPDATE_FOLLOW, GET_STATS } from './types';
 import axios from 'axios';
 import { setAlert } from './alert';
 
@@ -142,5 +142,22 @@ export const unfollow = (uid) => async (dispatch) => {
     //   type: PROFILE_ERROR,
     //   payload: { msg: error.response.statusText, status: error.response.status }
     // });
+  }
+};
+
+// Get stats
+export const getProfileStats = (id) => async (dispatch) => {
+  try {
+    const res = await axios.get(`/api/profile/stat/${id}`);
+
+    dispatch({
+      type: GET_STATS,
+      payload: res.data
+    });
+  } catch (error) {
+    dispatch({
+      type: PROFILE_ERROR,
+      payload: { msg: error.response.statusText, status: error.response.status }
+    });
   }
 };

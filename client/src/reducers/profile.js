@@ -1,10 +1,11 @@
-import { CLEAR_PROFILE, GET_PROFILE, OTHER_USER, PROFILE_ERROR } from '../actions/types';
+import { CLEAR_PROFILE, GET_PROFILE, GET_STATS, OTHER_USER, PROFILE_ERROR } from '../actions/types';
 
 const initialState = {
   profile: null,
   other_user: null,
   profiles: [],
   loading: true,
+  stats: null,
   error: {}
 };
 
@@ -33,6 +34,12 @@ const profile = (state = initialState, action) => {
       return {
         ...state,
         profile: null,
+        loading: false
+      };
+    case GET_STATS:
+      return {
+        ...state,
+        stats: payload,
         loading: false
       };
     default:
