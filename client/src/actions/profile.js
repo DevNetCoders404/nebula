@@ -161,3 +161,28 @@ export const getProfileStats = (id) => async (dispatch) => {
     });
   }
 };
+
+// Change name
+export const addName = (name) => async (dispatch) => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  };
+
+  const body = JSON.stringify({ name });
+  try {
+    const res = await axios.put('api/users/name', body, config);
+
+    // dispatch({
+    //   type: GET_PROFILE,
+    //   payload: res.data
+    // });
+    dispatch(setAlert('Name Updated', 'success'));
+  } catch (error) {
+    dispatch({
+      type: PROFILE_ERROR,
+      payload: { msg: error.response.statusText, status: error.response.status }
+    });
+  }
+};

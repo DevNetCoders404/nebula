@@ -15,11 +15,11 @@ import {
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import ReactFocusLock from 'react-focus-lock';
-import { addGeneral } from '../../actions/profile';
+import { addName } from '../../actions/profile';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-function NamePopOver({ addGeneral, name, setName, display }) {
+function NamePopOver({ addName, name, setName, display }) {
   const { onOpen, onClose, isOpen } = useDisclosure();
   const [name1, setName1] = useState('');
   const save = () => {
@@ -28,11 +28,11 @@ function NamePopOver({ addGeneral, name, setName, display }) {
     if (name1.length > 12) {
       name2 = name1.split(' ');
       setName(name2[0]);
-      addGeneral({ name });
+      addName(name);
       return;
     }
     setName(name1);
-    addGeneral({ name });
+    addName(name);
   };
   const Name = ({ onCancel }) => {
     return (
@@ -98,7 +98,7 @@ function NamePopOver({ addGeneral, name, setName, display }) {
 }
 
 NamePopOver.propTypes = {
-  addGeneral: PropTypes.func.isRequired,
+  addName: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired
 };
 
@@ -106,4 +106,4 @@ const mapStateToProps = (state) => ({
   profile: state.profile
 });
 
-export default connect(mapStateToProps, { addGeneral })(NamePopOver);
+export default connect(mapStateToProps, { addName })(NamePopOver);
