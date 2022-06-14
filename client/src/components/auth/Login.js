@@ -11,13 +11,14 @@ import {
   InputRightElement,
   Flex,
   Heading,
-  Image
+  Image,
+  Box
 } from '@chakra-ui/react';
 import { Link, Redirect } from 'react-router-dom';
+import { Link as ReachLink } from 'react-router-dom';
 import { login } from '../../actions/auth';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import Navbar from '../layout/Navbar';
 
 function Login({ login, isAuthenticated }) {
   const [formData, setFormData] = useState({
@@ -42,20 +43,34 @@ function Login({ login, isAuthenticated }) {
 
   return (
     <div className='log-in'>
-      <Navbar />
+      <Box p='4'>
+        <Heading size='2xl' fontFamily='Ubuntu' ml={['1', '1', '0.1', '8', '14']}>
+          <Link
+            as={ReachLink}
+            to='/'
+            _focus={{ outline: '0' }}
+            textDecoration='none'
+            _hover={{ textDecoration: 'none' }}
+          >
+            Nebu<span style={{ color: '#38B2AC' }}>la</span>
+          </Link>
+        </Heading>
+      </Box>
       <Flex
         height='100%'
-        marginTop='10%'
+        marginTop='6%'
         alignItems='center'
         justifyContent={['center', 'center', 'flex-end', 'flex-end', 'flex-end']}
-        mr={['none', 'none', '30px', '30px', '300px']}
+        mr={['none', 'none', '30px', '70px', '200px']}
       >
         <Flex
           direction='column'
-          height={['100vh', '100vh', '70vh', '70vh', '60vh']}
           width={['100%', '100%', '350px', '350px', '350px']}
           rounded={6}
-          p={12}
+          paddingTop={12}
+          paddingBottom={8}
+          paddingLeft={12}
+          paddingRight={12}
           background='gray.100'
         >
           <Heading mb={6} mt={['20', '20', '5', '5']}>

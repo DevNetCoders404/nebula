@@ -10,14 +10,15 @@ import {
   InputRightElement,
   Flex,
   Heading,
-  Image
+  Image,
+  Box
 } from '@chakra-ui/react';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { register } from '../../actions/auth';
+import { Link as ReachLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import Navbar from '../layout/Navbar';
 
 function Signup({ register, isAuthenticated }) {
   const [formData, setFormData] = useState({
@@ -27,18 +28,19 @@ function Signup({ register, isAuthenticated }) {
     password: ''
   });
 
-  const { name, username, email, password } = formData;
+  const { name, username, email1, password } = formData;
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handleSubmit = (e) => {
+    let email = email1.toLowerCase();
     e.preventDefault();
     register({ name, username, email, password });
   };
 
   const [showPassword, setShowPassword] = useState(false);
 
-  const isInvalid = password === '' || email === '' || name === '';
+  const isInvalid = password === '' || email1 === '' || name === '';
 
   if (isAuthenticated) {
     return <Redirect to='/dashboard' />;
@@ -46,24 +48,54 @@ function Signup({ register, isAuthenticated }) {
 
   return (
     <div className='sign-up'>
-      <Navbar />
+      <Box p='4'>
+        <Heading size='2xl' fontFamily='Ubuntu' ml={['1', '1', '0.1', '8', '14']}>
+          <Link
+            as={ReachLink}
+            to='/'
+            _focus={{ outline: '0' }}
+            textDecoration='none'
+            _hover={{ textDecoration: 'none' }}
+          >
+            Nebu<span style={{ color: '#38B2AC' }}>la</span>
+          </Link>
+        </Heading>
+      </Box>
       <Flex
         height='100%'
-        marginTop='10%'
-        marginBottom='5%'
+        /*marginTop='10%'*/
+        marginTop={{
+          md: '15%',
+          lg: '1%',
+          xl: '2%',
+          '2xl': '1%',
+          '3xl': '400px'
+        }}
         alignItems='center'
         justifyContent={['center', 'center', 'flex-end', 'flex-end', 'flex-end']}
-        mr={['none', 'none', '30px', '30px', '300px']}
+        mr={['none', 'none', '30px', '30px', '200px']}
       >
         <Flex
           direction='column'
           height={['100%', '100%', '100%', '100%', '100%']}
-          width={['100%', '100%', '350px', '350px', '350px']}
+          width={{ md: '400px', lg: '400px', xl: '400px', '2xl': '400px', '3xl': '400px' }}
           rounded={6}
-          p={12}
+          paddingTop={8}
+          paddingBottom={3}
+          paddingLeft={12}
+          paddingRight={12}
           background='gray.100'
         >
-          <Heading mb={6} mt={['20', '20', '5', '5']}>
+          <Heading
+            mb={6}
+            marginTop={{
+              md: '-3%',
+              lg: '-3%',
+              xl: '-3%',
+              '2xl': '-3%',
+              '3xl': '400px'
+            }}
+          >
             Sign Up
           </Heading>
           <form onSubmit={handleSubmit}>
@@ -99,7 +131,7 @@ function Signup({ register, isAuthenticated }) {
                   isRequired
                   type='email'
                   name='email'
-                  value={email}
+                  value={email1}
                   onChange={handleChange}
                 ></Input>
                 <FormHelperText>We'll never share your email.</FormHelperText>
