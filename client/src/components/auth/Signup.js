@@ -24,7 +24,7 @@ function Signup({ register, isAuthenticated }) {
   const [formData, setFormData] = useState({
     name: '',
     username: '',
-    email: '',
+    email1: '',
     password: ''
   });
 
@@ -130,7 +130,7 @@ function Signup({ register, isAuthenticated }) {
                   variant='filled'
                   isRequired
                   type='email'
-                  name='email'
+                  name='email1'
                   value={email1}
                   onChange={handleChange}
                 ></Input>
