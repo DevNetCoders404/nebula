@@ -125,14 +125,21 @@ router.put('/like/:id', auth, async (req, res) => {
       return res.status(404).json({ msg: 'Post not found' });
     }
 
+    const author = await Users.findById(posts.user);
+
     // Checks if the post has already been liked
     if (posts.likes.filter((like) => like.user.toString() === req.user.id).length > 0) {
       return res.status(400).json({ msg: 'Post already liked' });
     }
 
     posts.likes.unshift({ user: req.user.id });
+    console.log(author.points);
+
+    author.points = author.points + 5;
+    console.log(author.points);
 
     await posts.save();
+    await author.save();
 
     res.json(posts.likes);
   } catch (err) {
@@ -150,6 +157,7 @@ router.put('/like/:id', auth, async (req, res) => {
 router.put('/unlike/:id', auth, async (req, res) => {
   try {
     const posts = await Post.findById(req.params.id);
+    const author = await Users.findById(posts.user);
 
     if (!posts) {
       return res.status(404).json({ msg: 'Post not found' });
@@ -162,10 +170,14 @@ router.put('/unlike/:id', auth, async (req, res) => {
 
     // Get remove index
     const removeIndex = posts.likes.map((like) => like.user.toString()).indexOf(req.user.id);
+    console.log(author.points);
 
     posts.likes.splice(removeIndex, 1);
+    author.points -= 5;
+    console.log(author.points);
 
     await posts.save();
+    await author.save();
 
     res.json(posts.likes);
   } catch (err) {
